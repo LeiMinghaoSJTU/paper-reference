@@ -1,0 +1,132 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand*\HyPL@Entry[1]{}
+\citation{renardy2006introduction}
+\citation{sommerfeld1949partial}
+\citation{jones2009differential}
+\citation{hughes2012finite}
+\citation{strikwerda2004finite}
+\citation{eymard2000finite}
+\citation{hornik1989multilayer}
+\citation{raissi2018deep}
+\citation{rudy2017data}
+\citation{wu2020data}
+\citation{navaneeth2022koopman}
+\citation{raissi2019physics}
+\citation{goswami2020transfer}
+\citation{chakraborty2021transfer}
+\HyPL@Entry{0<</S/D>>}
+\citation{chen1995universal}
+\citation{lu2019deeponet}
+\citation{lu2022comprehensive}
+\citation{garg2022assessment}
+\citation{lin2021seamless}
+\citation{goswami2022physics}
+\citation{li2020neural}
+\citation{li2020fourier}
+\citation{bachman2000fourier}
+\citation{bachman2000fourier}
+\citation{boggess2015first}
+\citation{wirsing2020time}
+\citation{mallat1992singularity}
+\citation{cho2002method}
+\citation{sheybani2011dimensionality}
+\citation{martin2011novel}
+\citation{liu2012shannon}
+\citation{zhang1995wavelet}
+\citation{xu2019graph}
+\citation{shervani2020chemical}
+\citation{gupta2021multiwavelet}
+\citation{selesnick2005dual}
+\citation{ray2006dual}
+\newlabel{sec:methods}{{}{3}{Operator learning through neural operator}{section*.3}{}}
+\newlabel{eq:iteration}{{2}{3}{Operator learning through neural operator}{equation.2}{}}
+\newlabel{eq:integral}{{3}{3}{Operator learning through neural operator}{equation.3}{}}
+\citation{hornik1989multilayer}
+\citation{chen1995universal}
+\citation{lu2022comprehensive}
+\citation{lu2019deeponet}
+\citation{li2020fourier}
+\citation{gupta2021multiwavelet}
+\citation{hendrycks2016gaussian}
+\citation{daubechies1992ten}
+\citation{meyer1993wavelets}
+\newlabel{eq:converge}{{4}{4}{Operator learning through neural operator}{equation.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces \textbf  {Illustration of the architecture of the wavelet neural operator (WNO)}. (a) \textbf  {Schematic of the proposed neural operator}. First lift the inputs to a higher dimension by a local transformation $P(\cdot )$. Then pass the lifted inputs to a series of wavelet kernel integral layer. Transform back the final output of the wavelet integral layer using a local transformation $Q(\cdot )$. Finally, activate the output of $Q(\cdot )$, which will provide the solution $u(x)$. In the wavelet kernel integral layer, the multilevel wavelet decomposition of the inputs are performed first, as a result of which the horizontal, vertical and diagonal coefficients at different levels are obtained. The convolution between neural network weights and the subband coefficients of last level are then performed. The inverse wavelet transform is performed on the convoluted coefficients to transform the reduced inputs to original dimension. Suitable activation is done on the output of the wavelet kernel integration layer. (b) \textbf  {A simple WNO with one wavelet kernel integral layer}. The inputs contain the initial parameters and space information. The local transformations $P(\cdot )$ and $Q(\cdot )$ are modelled as shallow fully connected neural network. The output of $P(\cdot )$ is fed into the wavelet integral layer. The integral layer consists of two separate branches. In the first branch the wavelet decomposition of inputs followed by parameterization of integral kernel is done. In the second branch a convolution neural network (CNN) with kernel size 1 is constructed. The outputs of the two branches are then summed and activation's are performed. Then the outputs are passed through the transformation $Q(\cdot )$, which provides the target solution $u(x)$. In similar manner, a WNO with arbitrary number of wavelet integral layers can be be constructed.}}{4}{figure.caption.4}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig_methodology}{{1}{4}{\textbf {Illustration of the architecture of the wavelet neural operator (WNO)}. (a) \textbf {Schematic of the proposed neural operator}. First lift the inputs to a higher dimension by a local transformation $P(\cdot )$. Then pass the lifted inputs to a series of wavelet kernel integral layer. Transform back the final output of the wavelet integral layer using a local transformation $Q(\cdot )$. Finally, activate the output of $Q(\cdot )$, which will provide the solution $u(x)$. In the wavelet kernel integral layer, the multilevel wavelet decomposition of the inputs are performed first, as a result of which the horizontal, vertical and diagonal coefficients at different levels are obtained. The convolution between neural network weights and the subband coefficients of last level are then performed. The inverse wavelet transform is performed on the convoluted coefficients to transform the reduced inputs to original dimension. Suitable activation is done on the output of the wavelet kernel integration layer. (b) \textbf {A simple WNO with one wavelet kernel integral layer}. The inputs contain the initial parameters and space information. The local transformations $P(\cdot )$ and $Q(\cdot )$ are modelled as shallow fully connected neural network. The output of $P(\cdot )$ is fed into the wavelet integral layer. The integral layer consists of two separate branches. In the first branch the wavelet decomposition of inputs followed by parameterization of integral kernel is done. In the second branch a convolution neural network (CNN) with kernel size 1 is constructed. The outputs of the two branches are then summed and activation's are performed. Then the outputs are passed through the transformation $Q(\cdot )$, which provides the target solution $u(x)$. In similar manner, a WNO with arbitrary number of wavelet integral layers can be be constructed}{figure.caption.4}{}}
+\citation{li2020fourier}
+\citation{lu2022comprehensive}
+\citation{lu2022comprehensive}
+\citation{li2020fourier}
+\newlabel{sec:numerical}{{}{5}{Operator learning of example problems through WNO}{section*.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Dataset size for each problem, unless otherwise stated. WNO architecture for each problem, unless otherwise stated.}}{5}{table.caption.6}\protected@file@percent }
+\newlabel{tab:network_param}{{1}{5}{Dataset size for each problem, unless otherwise stated. WNO architecture for each problem, unless otherwise stated}{table.caption.6}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Number of epochs required to obtain the best prediction results. Note that the number of epochs here for DeepONet and FNO, except the Allen-Cahn example are reported from their respective original papers.}}{5}{table.caption.7}\protected@file@percent }
+\newlabel{table_epochs}{{2}{5}{Number of epochs required to obtain the best prediction results. Note that the number of epochs here for DeepONet and FNO, except the Allen-Cahn example are reported from their respective original papers}{table.caption.7}{}}
+\citation{lu2022comprehensive}
+\citation{li2020fourier}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Mean $L^2$ relative error between the true and predicted results.}}{6}{table.caption.8}\protected@file@percent }
+\newlabel{table_accuracy}{{3}{6}{Mean $L^2$ relative error between the true and predicted results}{table.caption.8}{}}
+\citation{lu2022comprehensive}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces \textbf  {Operator learning of flow problems}. First row: \textbf  {Burgers' PDE with 1024 spatial resolution}. (a) the initial conditions. (b) The solution to the 1D Burgers flow equation at $t=1$. The aim was to learn the differential operator of Burgers' PDE. For given input functions, the predictions are shown and it can be seen that the predictions of proposed WNO matches with the true solution almost exactly. \textbf  {Darcy flow in the rectangular domain with spatial resolution of ${\bf  {85 \times 85}}$}. The aim is to learn the differential operator of Darcy equation. The prediction of output pressure fields from two different input permeability conditions are shown in the figure. The errors indicate that the predictions match the true solutions almost exactly. \textbf  {Darcy flow in a triangular domain with a notch}. The goal here is to test the performance of proposed WNO for learning nonlinear operators in complex geometric conditions. For the given boundary conditions, the pressure fields obtained using the proposed WNO are shown in the figure. The errors against each of the predictions depict that the proposed WNO can learn operators in complex geometric conditions also. \textbf  {Navier-Stokes equation with spatial resolution of ${\bf  {64 \times 64}}$}. In this example, the aim is to use WNO for learning of differential operators of 2D time dependent problems. The initial vorticity (top row) and the predictions at $t=11$s (second row first column) and $t=20$s (second row second column) are shown. The errors indicates that the proposed WNO can learn highly nonlinear operators.}}{7}{figure.caption.10}\protected@file@percent }
+\newlabel{fig_result1}{{2}{7}{\textbf {Operator learning of flow problems}. First row: \textbf {Burgers' PDE with 1024 spatial resolution}. (a) the initial conditions. (b) The solution to the 1D Burgers flow equation at $t=1$. The aim was to learn the differential operator of Burgers' PDE. For given input functions, the predictions are shown and it can be seen that the predictions of proposed WNO matches with the true solution almost exactly. \textbf {Darcy flow in the rectangular domain with spatial resolution of ${\bf {85 \times 85}}$}. The aim is to learn the differential operator of Darcy equation. The prediction of output pressure fields from two different input permeability conditions are shown in the figure. The errors indicate that the predictions match the true solutions almost exactly. \textbf {Darcy flow in a triangular domain with a notch}. The goal here is to test the performance of proposed WNO for learning nonlinear operators in complex geometric conditions. For the given boundary conditions, the pressure fields obtained using the proposed WNO are shown in the figure. The errors against each of the predictions depict that the proposed WNO can learn operators in complex geometric conditions also. \textbf {Navier-Stokes equation with spatial resolution of ${\bf {64 \times 64}}$}. In this example, the aim is to use WNO for learning of differential operators of 2D time dependent problems. The initial vorticity (top row) and the predictions at $t=11$s (second row first column) and $t=20$s (second row second column) are shown. The errors indicates that the proposed WNO can learn highly nonlinear operators}{figure.caption.10}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces \textbf  {Operator learning of Allen-Cahn reactor-diffusion equation and wave advection equation}. \textbf  {Wave advection PDE}: For solution, a spatio-temporal resolution of $40 \times 40$ is used. The proposed WNO is used here to learn the operator that can predict the wave propagation through continuous medium. Three independent initial conditions (IC) were taken, for which the true, prediction and corresponding errors are plotted. The error plots demonstrate that the prediction results of proposed WNO is very accurate. \textbf  {Allen-Cahn PDE}: For three different initial conditions, the final solutions at $t=20$s are plotted. This PDE has chaotic nature, i.e., the solutions diverges significantly for small perturbations in initial conditions. The aim here is to test the ability of the proposed WNO for prediction of chaotic type solutions. The solutions are obtained on a spatial resolution of $43 \times 43$. Three different IC are taken and for each IC the true and WNO predicted solutions are shown. The errors against each case demonstrate that the proposed WNO could predict the true solutions almost exactly.}}{8}{figure.caption.11}\protected@file@percent }
+\newlabel{fig_acandav}{{3}{8}{\textbf {Operator learning of Allen-Cahn reactor-diffusion equation and wave advection equation}. \textbf {Wave advection PDE}: For solution, a spatio-temporal resolution of $40 \times 40$ is used. The proposed WNO is used here to learn the operator that can predict the wave propagation through continuous medium. Three independent initial conditions (IC) were taken, for which the true, prediction and corresponding errors are plotted. The error plots demonstrate that the prediction results of proposed WNO is very accurate. \textbf {Allen-Cahn PDE}: For three different initial conditions, the final solutions at $t=20$s are plotted. This PDE has chaotic nature, i.e., the solutions diverges significantly for small perturbations in initial conditions. The aim here is to test the ability of the proposed WNO for prediction of chaotic type solutions. The solutions are obtained on a spatial resolution of $43 \times 43$. Three different IC are taken and for each IC the true and WNO predicted solutions are shown. The errors against each case demonstrate that the proposed WNO could predict the true solutions almost exactly}{figure.caption.11}{}}
+\newlabel{sec:application}{{}{8}{Weather forecast: prediction of the monthly mean 2m air-temperature}{section*.13}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces \textbf  {Methodology for the short-term weekly forecast of 2m air temperature on a resolution of ${\mathbf  {2^{\circ } \times 2^{\circ }}}$}. The aim of the short-term forecast is to train the WNO using previous 7 days data and then predict the 2m temperature for next 7 days. To do this, a recurrent neural network (RNN) structure is employed within the WNO. The RNN framework takes the previous 7 days data as input and then performs prediction for Day 8. For prediction the parameters are learned through convolution using the proposed WNO architecture. The Day 8 prediction data is then appended in the previous 7 day database. To maintain the recurrent structure i.e., to transfer the information from Day 8 to future predictions the information of Day 1 from previous data is discarded and the process is continued until the next 7 day predictions are made. This results in a highly efficient and accurate.}}{9}{figure.caption.12}\protected@file@percent }
+\newlabel{fig_era5_climate}{{4}{9}{\textbf {Methodology for the short-term weekly forecast of 2m air temperature on a resolution of ${\mathbf {2^{\circ } \times 2^{\circ }}}$}. The aim of the short-term forecast is to train the WNO using previous 7 days data and then predict the 2m temperature for next 7 days. To do this, a recurrent neural network (RNN) structure is employed within the WNO. The RNN framework takes the previous 7 days data as input and then performs prediction for Day 8. For prediction the parameters are learned through convolution using the proposed WNO architecture. The Day 8 prediction data is then appended in the previous 7 day database. To maintain the recurrent structure i.e., to transfer the information from Day 8 to future predictions the information of Day 1 from previous data is discarded and the process is continued until the next 7 day predictions are made. This results in a highly efficient and accurate}{figure.caption.12}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces \textbf  {WNO for forecast of the weekly 2m air temperature on a resolution of ${\mathbf  {2^{\circ } \times 2^{\circ }}}$}. The predictions along with their corresponding errors for weekly forecast of 2m temperature at 12.00 UTC between $10^{th}$ to $15^{th}$ April are shown in the above figure. The errors are obtained with respect to the forecast made by Integrated Forecast System (IFS) of ECMWF. The predictions using proposed WNO are obtained with an error of the magnitude of $<1 \%$ that is a proof of the nearly accurate match with the actual forecast data. Once the training is done the predictions for the entire week are made within 3 seconds on the given GPU, which is evident of the computational advantage of the proposed WNO framework.}}{10}{figure.caption.14}\protected@file@percent }
+\newlabel{fig_era5_time}{{5}{10}{\textbf {WNO for forecast of the weekly 2m air temperature on a resolution of ${\mathbf {2^{\circ } \times 2^{\circ }}}$}. The predictions along with their corresponding errors for weekly forecast of 2m temperature at 12.00 UTC between $10^{th}$ to $15^{th}$ April are shown in the above figure. The errors are obtained with respect to the forecast made by Integrated Forecast System (IFS) of ECMWF. The predictions using proposed WNO are obtained with an error of the magnitude of $<1 \%$ that is a proof of the nearly accurate match with the actual forecast data. Once the training is done the predictions for the entire week are made within 3 seconds on the given GPU, which is evident of the computational advantage of the proposed WNO framework}{figure.caption.14}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces \textbf  {WNO for forecast of the monthly averaged 2m air temperature on a resolution of ${\mathbf  {2^{\circ } \times 2^{\circ }}}$}. The predictions for monthly averaged 2m temperature for 1st February of 2019 is performed. The datasets from Numerical Weather Prediction and proposed WNO are shown in the above figure. The predictions shows accurate match with the actual data with error of the magnitude of $\approx 0.1 \%$. On close observation it can be observed that, in addition to the actual temperature gradients the proposed WNO has also captured the finer details like white spots. Even in small resolutions the WNO has learned the small-scale features.}}{11}{figure.caption.15}\protected@file@percent }
+\newlabel{fig_era5}{{6}{11}{\textbf {WNO for forecast of the monthly averaged 2m air temperature on a resolution of ${\mathbf {2^{\circ } \times 2^{\circ }}}$}. The predictions for monthly averaged 2m temperature for 1st February of 2019 is performed. The datasets from Numerical Weather Prediction and proposed WNO are shown in the above figure. The predictions shows accurate match with the actual data with error of the magnitude of $\approx 0.1 \%$. On close observation it can be observed that, in addition to the actual temperature gradients the proposed WNO has also captured the finer details like white spots. Even in small resolutions the WNO has learned the small-scale features}{figure.caption.15}{}}
+\newlabel{sec:WNO}{{}{12}{Methods: Wavelet Neural Operator for parametric partial differential equations}{section*.17}{}}
+\newlabel{eq:convolve}{{6}{12}{Methods: Wavelet Neural Operator for parametric partial differential equations}{equation.6}{}}
+\newlabel{eq:wavelet}{{7}{12}{Methods: Wavelet Neural Operator for parametric partial differential equations}{equation.7}{}}
+\newlabel{eq:conv_pre}{{9}{12}{Methods: Wavelet Neural Operator for parametric partial differential equations}{equation.9}{}}
+\newlabel{eq:conv_final}{{10}{13}{Methods: Wavelet Neural Operator for parametric partial differential equations}{equation.10}{}}
+\newlabel{eq:gen_wav}{{15}{13}{Relation with Fourier Neural Operator (FNO)}{equation.15}{}}
+\citation{lee2019pywavelets}
+\citation{cotter2020uses}
+\bibcite{renardy2006introduction}{1}
+\bibcite{sommerfeld1949partial}{2}
+\bibcite{jones2009differential}{3}
+\bibcite{hughes2012finite}{4}
+\bibcite{strikwerda2004finite}{5}
+\bibcite{eymard2000finite}{6}
+\bibcite{hornik1989multilayer}{7}
+\bibcite{raissi2018deep}{8}
+\bibcite{rudy2017data}{9}
+\bibcite{wu2020data}{10}
+\bibcite{navaneeth2022koopman}{11}
+\bibcite{raissi2019physics}{12}
+\bibcite{goswami2020transfer}{13}
+\bibcite{chakraborty2021transfer}{14}
+\bibcite{chen1995universal}{15}
+\bibcite{lu2019deeponet}{16}
+\bibcite{lu2022comprehensive}{17}
+\bibcite{garg2022assessment}{18}
+\bibcite{lin2021seamless}{19}
+\bibcite{goswami2022physics}{20}
+\bibcite{li2020neural}{21}
+\bibcite{li2020fourier}{22}
+\bibcite{bachman2000fourier}{23}
+\bibcite{boggess2015first}{24}
+\bibcite{wirsing2020time}{25}
+\bibcite{mallat1992singularity}{26}
+\bibcite{cho2002method}{27}
+\bibcite{sheybani2011dimensionality}{28}
+\bibcite{martin2011novel}{29}
+\bibcite{liu2012shannon}{30}
+\bibcite{zhang1995wavelet}{31}
+\bibcite{xu2019graph}{32}
+\bibcite{shervani2020chemical}{33}
+\bibcite{gupta2021multiwavelet}{34}
+\bibcite{selesnick2005dual}{35}
+\bibcite{ray2006dual}{36}
+\bibcite{hendrycks2016gaussian}{37}
+\bibcite{daubechies1992ten}{38}
+\bibcite{meyer1993wavelets}{39}
+\bibcite{lee2019pywavelets}{40}
+\bibcite{cotter2020uses}{41}
+\gdef \@abspage@last{16}

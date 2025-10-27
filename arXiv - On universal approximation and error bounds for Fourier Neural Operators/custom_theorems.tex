@@ -1,0 +1,30 @@
+% define some theorem environments
+\declaretheoremstyle[
+  headfont=\normalfont\bfseries\itshape,
+  numbered=unless unique,
+  bodyfont=\normalfont,
+  spaceabove=1em plus 0.75em minus 0.25em,
+  spacebelow=1em plus 0.75em minus 0.25em,
+  qed={},
+]{deflt}
+
+%%
+\theoremstyle{deflt}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem{setting}[theorem]{Setting}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{problem}[theorem]{Problem}
+
+%%
+\numberwithin{equation}{section}
+\numberwithin{theorem}{section}
+
+\newtheorem*{claim}{Claim}
+\newtheorem*{question}{Question}

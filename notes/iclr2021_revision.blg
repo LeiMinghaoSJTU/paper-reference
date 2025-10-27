@@ -1,0 +1,50 @@
+This is BibTeX, Version 0.99d (TeX Live 2025)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: iclr2021_revision.aux
+The style file: iclr2021.bst
+Database file #1: iclr2021.bib
+Warning--empty chapter and pages in DeVoreReducedBasis
+Warning--empty publisher in DeVoreReducedBasis
+Warning--empty journal in mingo2004Fourier
+You've used 34 entries,
+            2773 wiz_defined-function locations,
+            787 strings with 11928 characters,
+and the built_in function-call counts, 17053 in all, are:
+= -- 1457
+> -- 1210
+< -- 13
++ -- 408
+- -- 372
+* -- 1443
+:= -- 2668
+add.period$ -- 114
+call.type$ -- 34
+change.case$ -- 220
+chr.to.int$ -- 32
+cite$ -- 71
+duplicate$ -- 745
+empty$ -- 1260
+format.name$ -- 418
+if$ -- 3535
+int.to.chr$ -- 3
+int.to.str$ -- 1
+missing$ -- 34
+newline$ -- 188
+num.names$ -- 136
+pop$ -- 451
+preamble$ -- 1
+purify$ -- 188
+quote$ -- 0
+skip$ -- 594
+stack$ -- 0
+substring$ -- 414
+swap$ -- 91
+text.length$ -- 5
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 364
+warning$ -- 3
+while$ -- 131
+width$ -- 0
+write$ -- 449
+(There were 3 warnings)

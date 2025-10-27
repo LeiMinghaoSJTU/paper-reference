@@ -1,0 +1,109 @@
+\begin{thebibliography}{10}
+
+\bibitem{BAR1}
+{\sc A.~R. Barron}, {\em Universal approximation bounds for superpositions of a sigmoidal function}, IEEE Trans. Inform. Theory., 39 (1993), pp.~930--945.
+
+\bibitem{bhattacharya2020model}
+{\sc K.~Bhattacharya, B.~Hosseini, N.~B. Kovachki, and A.~M. Stuart}, {\em Model reduction and neural networks for parametric {PDE}s}, The SMAI journal of computational mathematics, 7 (2021), pp.~121--157.
+
+\bibitem{boyd2005fourier}
+{\sc J.~P. Boyd}, {\em {F}ourier embedded domain methods: {E}xtending a function defined on an irregular region to a rectangle so that the extension is spatially periodic and {C} infinity}, Appl. Math. Comput., 161 (2005), p.~591–597.
+
+\bibitem{BM2001}
+{\sc H.~Brezis and P.~Mironescu}, {\em Composition in fractional {S}obolev spaces}, Discrete \& Continuous Dynamical Systems-A, 7 (2001), p.~241.
+
+\bibitem{bruno2010highorder1}
+{\sc O.~P. Bruno and M.~Lyon}, {\em High-order unconditionally stable {FC-AD} solvers for general smooth domains {I}. {B}asic elements}, Journal of Computational Physics, 229 (2010), pp.~2009--2033.
+
+\bibitem{donet3}
+{\sc S.~Cai, Z.~Wang, L.~Lu, T.~A. Zaki, and G.~E. Karniadakis}, {\em Deepm\&mnet: Inferring the electroconvection multiphysics fields based on operator approximation by neural networks}, Journal of Computational Physics, 436 (2021), p.~110296.
+
+\bibitem{Canuto2007}
+{\sc C.~Canuto, M.~Y. Hussaini, A.~Quarteroni, and T.~A. Zang}, {\em Spectral methods: fundamentals in single domains}, Springer Science \& Business Media, 2007.
+
+\bibitem{ChenChen}
+{\sc T.~Chen and H.~Chen}, {\em Universal approximation to nonlinear operators by neural networks with arbitrary activation functions and its application to dynamical systems}, IEEE Transactions on Neural Networks, 6 (1995), pp.~911--917.
+
+\bibitem{Cy1}
+{\sc G.~Cybenko}, {\em Approximations by superpositions of sigmoidal functions}, Approximation theory and its applications, 9 (1989), pp.~17--28.
+
+\bibitem{DLM1}
+{\sc T.~DeRyck, S.~Lanthaler, and S.~Mishra}, {\em On the approximation of functions by tanh neural networks}.
+\newblock Preprint, available from arXiv:2104:08938v1, 2021.
+
+\bibitem{HEJ1}
+{\sc W.~E, J.~Han, and A.~Jentzen}, {\em Deep learning-based numerical methods for high-dimensional parabolic partial differential equations and backward stochastic differential equations}, Communications in Mathematics and Statistics, 5 (2017), pp.~349--380.
+
+\bibitem{DLbook}
+{\sc I.~Goodfellow, Y.~Bengio, and A.~Courville}, {\em Deep learning}, MIT press, 2016.
+
+\bibitem{HOR1}
+{\sc K.~Hornik, M.~Stinchcombe, and H.~White}, {\em Multilayer feedforward networks are universal approximators}, Neural networks, 2 (1989), pp.~359--366.
+
+\bibitem{Kuty}
+{\sc G.~Kutyniok, P.~Petersen, M.~Raslan, and R.~Schneider}, {\em A theoretical analysis of deep neural networks and parametric pdes}, Constructive Approximation,  (2021), pp.~1--53.
+
+\bibitem{LMK2021}
+{\sc S.~Lanthaler, S.~Mishra, and G.~E. Karniadakis}, {\em Error estimates for {DeepOnets}: {A} deep learning framework in infinite dimensions}, 2021.
+
+\bibitem{DLnat}
+{\sc Y.~LeCun, Y.~Bengio, and G.~Hinton}, {\em Deep learning}, Nature, 521 (2015), pp.~436--444.
+
+\bibitem{li2020multipole}
+{\sc Z.~Li, N.~Kovachki, K.~Azizzadenesheli, B.~Liu, K.~Bhattacharya, A.~Stuart, and A.~Anandkumar}, {\em Multipole graph neural operator for parametric partial differential equations}, 2020.
+
+\bibitem{li2020neural}
+\leavevmode\vrule height 2pt depth -1.6pt width 23pt, {\em Neural operator: {G}raph kernel network for partial differential equations}, 2020.
+
+\bibitem{fourierop2020}
+{\sc Z.~Li, N.~B. Kovachki, K.~Azizzadenesheli, B.~liu, K.~Bhattacharya, A.~Stuart, and A.~Anandkumar}, {\em Fourier neural operator for parametric partial differential equations}, in International Conference on Learning Representations, 2021.
+
+\bibitem{donet4}
+{\sc C.~Lin, Z.~Li, L.~Lu, S.~Cai, M.~Maxey, and G.~E. Karniadakis}, {\em Operator learning for predicting multiscale bubble growth dynamics}, The Journal of Chemical Physics, 154 (2021), p.~104118.
+
+\bibitem{deeponets}
+{\sc L.~Lu, P.~Jin, and G.~E. Karniadakis}, {\em {DeepONet}: {L}earning nonlinear operators for identifying differential equations based on the universal approximation theorem of operators}, arXiv preprint arXiv:1910.03193,  (2019).
+
+\bibitem{LMR1}
+{\sc K.~O. Lye, S.~Mishra, and D.~Ray}, {\em Deep learning observables in computational fluid dynamics}, Journal of Computational Physics,  (2020), p.~109339.
+
+\bibitem{LMRS1}
+{\sc K.~O. Lye, S.~Mishra, D.~Ray, and P.~Chandrashekar}, {\em Iterative surrogate model optimization (ismo): An active learning algorithm for pde constrained optimization with deep neural networks}, Computer Methods in Applied Mechanics and Engineering, 374 (2021), p.~113575.
+
+\bibitem{bruno2010highorder2}
+{\sc M.~Lyon and O.~P. Bruno}, {\em High-order unconditionally stable {FC-AD} solvers for general smooth domains {II}. {E}lliptic, parabolic and hyperbolic {PDEs}; theoretical considerations}, Journal of Computational Physics, 229 (2010), pp.~3358--3381.
+
+\bibitem{MB2001}
+{\sc A.~J. Majda and A.~L. Bertozzi}, {\em Vorticity and Incompressible Flow}, Cambridge Texts in Applied Mathematics, Cambridge University Press, 2001.
+
+\bibitem{donet2}
+{\sc Z.~Mao, L.~Lu, O.~Marxen, T.~Zaki, and G.~E. Karniadakis}, {\em Deep{M}and{M}net for hypersonics: {P}redicting the coupled flow and finite-rate chemistry behind a normal shock using neural-network approximation of operators}.
+\newblock Preprint, available from arXiv:2011.03349v1, 2020.
+
+\bibitem{MM1}
+{\sc S.~Mishra and R.~Molinaro}, {\em Estimates on the generalization error of physics informed neural networks ({PINN}s) for approximating {PDE}s}.
+\newblock Preprint, available from arXiv:2006:16144v1, 2020.
+
+\bibitem{MM2}
+\leavevmode\vrule height 2pt depth -1.6pt width 23pt, {\em Estimates on the generalization error of physics informed neural networks ({PINN}s) for approximating {PDE}s {II}: {A} class of inverse problems}.
+\newblock Preprint, available from arXiv:2007:01138v1, 2020.
+
+\bibitem{KAR1}
+{\sc M.~Raissi and G.~E. Karniadakis}, {\em Hidden physics models: {M}achine learning of nonlinear partial differential equations}, Journal of Computational Physics, 357 (2018), pp.~125--141.
+
+\bibitem{KAR2}
+{\sc M.~Raissi, P.~Perdikaris, and G.~E. Karniadakis}, {\em Physics-informed neural networks: {A} deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations}, Journal of Computational Physics, 378 (2019), pp.~686--707.
+
+\bibitem{rogers2006degree}
+{\sc L.~G. Rogers}, {\em Degree-independent {S}obolev extension on locally uniform domains}, Journal of Functional Analysis, 235 (2006), pp.~619--665.
+
+\bibitem{SchwabZech2019}
+{\sc C.~Schwab and J.~Zech}, {\em Deep learning in high dimension: {N}eural network expression rates for generalized polynomial chaos expansions in {UQ}}, Analysis and Applications, 17 (2019), pp.~19--55.
+
+\bibitem{stein1970singular}
+{\sc E.~M. Stein}, {\em Singular Integrals and Differentiability Properties of Functions}, Princeton University Press, 1970.
+
+\bibitem{Yar1}
+{\sc D.~Yarotsky}, {\em Error bounds for approximations with deep {ReLU} networks}, Neural Networks, 94 (2017), pp.~103--114.
+
+\end{thebibliography}
