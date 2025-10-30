@@ -176,7 +176,7 @@ The power of neural operators comes from combining linear, global integral opera
 \section{Learning Operators}
 \label{sec:operator}
 Our methodology learns a mapping between two infinite dimensional spaces from a finite
-collection of observed input-output pairs. Let  $D \subset \R^d$ be a bounded, open set and \(\A = \A(D;\R^{d_a})\) and \(\U= \U(D;\R^{d_u})\) be separable Banach spaces of function taking values in \(\R^{d_a}\) and \(\R^{d_u}\) respectively. Furthermore let \(\Ftrue : \A \to \U\) be a (typically) non-linear map. We study maps \(\Ftrue\) which arise as the solution operators of parametric PDEs -- see Section \ref{sec:numerics} for examples. Suppose we have observations \(\{a_j, u_j\}_{j=1}^N\) where 
+collection of observed input-output pairs. Let  $D \subset \R^d$ be a bounded, open set and \(\A = \A(D;\R^{d_a})\) and \(\U= \U(D;\R^{d_u})\) be separable Banach spaces of function taking values in \(\R^{d_a}\) and \(G\R^{d_u}\) respectively. Furthermore let \(\Ftrue : \A \to \U\) be a (typically) non-linear map. We study maps \(\Ftrue\) which arise as the solution operators of parametric PDEs -- see Section \ref{sec:numerics} for examples. Suppose we have observations \(\{a_j, u_j\}_{j=1}^N\) where 
 \(a_j \sim \mu\) is an i.i.d. sequence from the probability measure \(\mu\) supported on 
 \(\A\) and \(u_j = \Ftrue(a_j)\) is possibly corrupted with noise. We aim to build an approximation of \(\Ftrue\) by 
 constructing a parametric map 

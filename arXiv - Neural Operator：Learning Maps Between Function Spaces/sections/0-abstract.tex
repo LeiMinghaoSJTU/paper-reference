@@ -1,0 +1,23 @@
+神经网络的经典发展主要聚焦于学习有限维欧几里得空间或有限集合之间的映射。我们提出将神经网络推广至算子学习领域，这类算子被称为 “神经算子”（neural operators），可在无限维函数空间之间实现映射。
+我们将神经算子表述为由线性积分算子与非线性激活函数构成的组合。针对所提神经算子，我们证明了其满足通用逼近定理 —— 这表明它能够逼近任意给定的非线性连续算子。此外，所提神经算子还具有离散化不变性：即在底层函数空间的不同离散化形式下，它们可共享相同的模型参数。
+同时，我们提出了四类高效参数化方法，即图神经算子（graph neural operators）、多极图神经算子（multi-pole graph neural operators）、低秩神经算子（low-rank neural operators）以及傅里叶神经算子（Fourier neural operators）。
+神经算子的一个重要应用场景是为偏微分方程（PDE）求解算子学习替代映射。我们以伯格斯方程（Burgers）、达西地下水流方程（Darcy subsurface flow）和纳维 - 斯托克斯方程（Navier-Stokes equations）等标准 PDE 为研究对象，结果表明：所提神经算子相较于现有基于机器学习的方法具有更优性能，同时其速度比传统 PDE 求解器快数个数量级。
+
+The classical development of neural networks has primarily focused on learning mappings between finite dimensional Euclidean spaces or finite sets.
+We propose a generalization of neural networks to learn operators, termed \emph{neural operators}, that map between infinite dimensional function spaces.
+We formulate the neural operator as a composition of  linear integral operators and nonlinear activation functions. We prove a universal approximation theorem for our proposed neural operator, showing that it can approximate any given nonlinear continuous operator. The proposed neural operators are also discretization-invariant, i.e., they share the same model parameters among different discretization of the underlying function spaces. 
+Furthermore, we introduce four classes of efficient parameterization, viz., graph neural operators,  multi-pole graph neural operators, low-rank neural operators, and Fourier neural operators.
+An important application for neural operators is learning surrogate maps for the solution operators of
+partial differential equations (PDEs). We consider standard PDEs such as the Burgers, Darcy subsurface flow, and the Navier-Stokes equations, and show that the proposed neural operators have superior performance compared to existing machine learning based methodologies,
+while being several orders of magnitude faster than conventional PDE solvers. 
+
+%Numerical experiments are presented in which the solution operator (mapping initial condition to solution)  is learned for Burgers' equation and the Navier-Stokes equation, and in which the coefficient to solution map is learned in the Darcy model of porous medium flow; a variety of linear operators, defined by linear  PDEs, are also used to illustrate key ideas.
+
+
+
+% \kamyar{
+% The classical development of neural networks has been primarily for mappings between a finite-dimensional spaces, e.g., between Euclidean space and a set of classes/labels, or between two finite-dimensional Euclidean spaces.
+% The purpose of this work is to generalize neural networks so that they can learn operators mapping between general spaces, e.g., between infinite dimensional spaces, such as function spaces. 
+% We formulate the approximation of operators by composition of nonlinear local activation functions and a class of linear local and non-local integral operators, so that the composed operator can approximate complex nonlinear, local, and non-local operators.
+% In this paper, we propose four formulations of the integral operators: graph-based operators, multipole graph-based operators, low rank operators, and Fourier operators.
+% Experiments confirm that the proposed neural operators have the desirable resolution-invariant properties and show competitive performance compared to existing methodologies from both the fields of neural networks and numerical analysis. }
