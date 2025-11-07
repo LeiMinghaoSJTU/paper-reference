@@ -1,0 +1,65 @@
+\contentsline {section}{\numberline {1}简介}{4}{section.1}%
+\contentsline {subsection}{\numberline {1.1}我们的方法}{4}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}背景与相关工作}{6}{subsection.1.2}%
+\contentsline {section}{\numberline {2}Learning Operators(算子学习设定)}{10}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Generic Parametric PDEs (泛型参数化偏微分方程)}{10}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}问题设定}{10}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Discretization(离散化)}{11}{subsection.2.3}%
+\contentsline {section}{\numberline {3}Neural Operators(神经算子)}{14}{section.3}%
+\contentsline {subsection}{\numberline {3.1}积分核算子（Integral Kernel Operators）}{15}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}单隐藏层构造 (Single Hidden Layer Construction)}{16}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}预处理（Preprocessing）}{17}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}离散化不变性与逼近性（Discretization Invariance and Approximation）}{17}{subsection.3.4}%
+\contentsline {section}{\numberline {4}参数化与计算 (Parameterization and Computation)}{19}{section.4}%
+\contentsline {subsection}{\numberline {4.1}核矩阵（Kernel Matrix）}{20}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}图神经算子（Graph Neural Operator, GNO）}{20}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}卷积神经网络（Convolutional Neural Networks）.}{23}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Low-rank Neural Operator (LNO)（低秩神经算子）}{24}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Multipole Graph Neural Operator (MGNO)}{26}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4.6}Fourier Neural Operator (FNO)}{31}{subsection.4.6}%
+\contentsline {subsection}{\numberline {4.7}Summary}{35}{subsection.4.7}%
+\contentsline {section}{\numberline {5}Neural Operators and Other Deep Learning Models}{36}{section.5}%
+\contentsline {subsection}{\numberline {5.1}DeepONets}{36}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Transformers as a Special Case of Neural Operators}{41}{subsection.5.2}%
+\contentsline {section}{\numberline {6}Test Problems}{44}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Poisson Equation}{44}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Darcy Flow}{46}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Burgers' Equation}{47}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Navier-Stokes Equation}{47}{subsection.6.4}%
+\contentsline {subsubsection}{\numberline {6.4.1}Bayesian Inverse Problem}{49}{subsubsection.6.4.1}%
+\contentsline {subsubsection}{\numberline {6.4.2}Spectra}{50}{subsubsection.6.4.2}%
+\contentsline {subsection}{\numberline {6.5}Choice of Loss Criteria}{50}{subsection.6.5}%
+\contentsline {section}{\numberline {7}Numerical Results}{51}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Poisson Equation}{52}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Darcy and Burgers Equations}{53}{subsection.7.2}%
+\contentsline {subsubsection}{\numberline {7.2.1}Darcy Flow}{54}{subsubsection.7.2.1}%
+\contentsline {subsubsection}{\numberline {7.2.2}Burgers' Equation}{55}{subsubsection.7.2.2}%
+\contentsline {subsubsection}{\numberline {7.2.3}Zero-shot super-resolution.}{57}{subsubsection.7.2.3}%
+\contentsline {subsection}{\numberline {7.3}Navier-Stokes Equation}{57}{subsection.7.3}%
+\contentsline {subsubsection}{\numberline {7.3.1}Zero-shot super-resolution.}{60}{subsubsection.7.3.1}%
+\contentsline {subsubsection}{\numberline {7.3.2}Spectral analysis}{60}{subsubsection.7.3.2}%
+\contentsline {subsubsection}{\numberline {7.3.3}Non-periodic boundary condition.}{61}{subsubsection.7.3.3}%
+\contentsline {subsubsection}{\numberline {7.3.4}Bayesian Inverse Problem}{62}{subsubsection.7.3.4}%
+\contentsline {subsection}{\numberline {7.4}Discussion and Comparison of the Four methods}{62}{subsection.7.4}%
+\contentsline {subsubsection}{\numberline {7.4.1}Ingenuity}{62}{subsubsection.7.4.1}%
+\contentsline {subsubsection}{\numberline {7.4.2}Expressiveness}{63}{subsubsection.7.4.2}%
+\contentsline {subsubsection}{\numberline {7.4.3}Complexity}{64}{subsubsection.7.4.3}%
+\contentsline {subsubsection}{\numberline {7.4.4}Refinability}{64}{subsubsection.7.4.4}%
+\contentsline {subsubsection}{\numberline {7.4.5}Robustness}{65}{subsubsection.7.4.5}%
+\contentsline {section}{\numberline {8}Approximation Theory}{67}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Neural Operators}{69}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Discretization Invariance}{71}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}Approximation Theorems}{72}{subsection.8.3}%
+\contentsline {section}{\numberline {9}Literature Review}{75}{section.9}%
+\contentsline {section}{\numberline {10}Conclusions}{80}{section.10}%
+\contentsline {subsection}{\numberline {10.1}Future Directions}{81}{subsection.10.1}%
+\contentsline {subsubsection}{\numberline {10.1.1}New Applications}{81}{subsubsection.10.1.1}%
+\contentsline {subsubsection}{\numberline {10.1.2}New Methodologies}{82}{subsubsection.10.1.2}%
+\contentsline {subsubsection}{\numberline {10.1.3}Theory}{82}{subsubsection.10.1.3}%
+\contentsline {section}{\numberline {A}}{98}{section.1}%
+\contentsline {section}{\numberline {B}}{100}{section.2}%
+\contentsline {section}{\numberline {C}}{111}{section.3}%
+\contentsline {section}{\numberline {D}}{120}{section.4}%
+\contentsline {section}{\numberline {E}}{124}{section.5}%
+\contentsline {section}{\numberline {F}}{127}{section.6}%
+\contentsline {section}{\numberline {G}}{130}{section.7}%

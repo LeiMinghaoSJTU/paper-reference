@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.8.12)  26 OCT 2025 20:39
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.8.12)  4 NOV 2025 16:32
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -604,10 +604,6 @@ Package hyperref Info: Link coloring OFF on input line 54.
 \@outlinefile=\write3
 \openout3 = `main_document.out'.
 
-
-
-Package hyperref Warning: Rerun to get /PageLabels entry.
-
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 LaTeX Info: Redefining \microtypecontext on input line 54.
@@ -622,7 +618,7 @@ Package microtype Info: Using default protrusion set `alltext'.
 Package microtype Info: No adjustment of tracking.
 Package microtype Info: No adjustment of spacing.
 Package microtype Info: No adjustment of kerning.
-(c:/texlive/2025/texmf-dist/tex/latex/microtype/mt-ptm.cfg
+ (c:/texlive/2025/texmf-dist/tex/latex/microtype/mt-ptm.cfg
 File: mt-ptm.cfg 2006/04/20 v1.7 microtype config. file: Times (RS)
 )
 LaTeX Font Info:    Trying to load font information for OT1+txr on input line 56.
@@ -747,18 +743,14 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
 Package rerunfilecheck Info: File `main_document.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 15409 strings out of 473832
- 243444 string characters out of 5733158
- 681649 words of memory out of 5000000
- 38269 multiletter control sequences out of 15000+600000
+ 15407 strings out of 473832
+ 243398 string characters out of 5733158
+ 681660 words of memory out of 5000000
+ 38267 multiletter control sequences out of 15000+600000
  596658 words of font info for 93 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  72i,18n,79p,2034b,465s stack positions out of 10000i,1000n,20000p,200000b,200000s

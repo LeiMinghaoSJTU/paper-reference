@@ -1,25 +1,29 @@
-
-\section{Learning Operators}
+\newpage
+\section{Learning Operators(算子学习设定)}
 \label{sec:setting}
-In subsection~\ref{sec:genericPDE}, we describe the generic setting of PDEs to make the discussions in the following setting concrete.
-In subsection \ref{sec:PS}, we outline the general problem of operator learning as well as our approach to solving it. In subsection \ref{sec:discretization}, we discuss the functional data that is available and how we work with it numerically.
+在子章节~\ref{sec:genericPDE}中，我们描述了偏微分方程（PDEs）的通用设定，以便使后续讨论的背景更加具体。
+在子章节~\ref{sec:PS}中，我们概述了算子学习的一般问题以及我们解决该问题的方法。
+在子章节~\ref{sec:discretization}中，我们讨论了可用的函数型数据以及我们如何在数值上处理这些数据。
 
 
-\subsection{Generic Parametric PDEs}
+\vspace{1cm}
+\subsection{Generic Parametric PDEs (泛型参数化偏微分方程)}
 \label{sec:genericPDE}
-We consider the generic family of PDEs of the following form,
- \begin{align}
+
+我们考虑如下形式的一类通用偏微分方程（PDE, Partial Differential Equation）：
+\begin{align}
 \label{eq:generalpde0}
 \begin{split}
 (\LL_a u)(x) &= f(x), \qquad x \in D, \\
 u(x) &= 0, \qquad \quad \:\: x \in \partial D,
 \end{split}
 \end{align}
-for some \(a \in \A\), \(f \in \U^*\) and \(D \subset \R^d\) a bounded domain. We assume that the solution \(u: D \to \R\) lives in the Banach space \(\U\) and  \(\LL_{a}: \A \to \mathcal{L}(\U; \U^*)\) is a mapping from the parameter Banach space \(\A\) to the space of (possibly unbounded) linear operators mapping \(\U\) to its dual \(\U^*\). A natural operator which arises from this PDE is \(\G^\dagger:= \LL_{a}^{-1}f : \A \to \U\) defined to map the parameter to the solution \(a \mapsto u\). A simple example that we study further in Section \ref{ssec:darcy} is when \(\LL_a\) is the weak form of the second-order elliptic operator  \(-\nabla \cdot (a \nabla)\) subject to homogeneous Dirichlet
-boundary conditions. In this setting, \(\A = L^\infty(D;\R_+)\), \(\U = H^1_0(D;\R)\), and \(\U^* = H^{-1}(D;\R)\). When needed, we will assume that the domain $D$ is discretized into $K \in \N$ points 
-and that we observe $N \in \N$ pairs of coefficient functions and (approximate) solution functions \(\{a^{(i)}, u^{(i)}\}_{i=1}^N\) that are used to train the model (see Section \ref{sec:PS}). We assume that \(a^{(i)}\) are i.i.d. samples from a probability measure \(\mu\) supported on \(\A\) and \(u^{(i)}\) are the pushforwards under \(\G^\dagger\).
+其中 $a \in \A$，$f \in \U^*$，$D \subset \R^d$ 是一个有界区域（bounded domain）。我们假设解 $u: D \to \R$ 属于Banach空间 $\U$，且 $\LL_{a}: \A \to \mathcal{L}(\U; \U^*)$ 是一个从参数Banach空间 $\A$ 映射到将 $\U$ 映射至其对偶空间 $\U^*$ 的（可能是无界的）线性算子空间 $\mathcal{L}(\U; \U^*)$ 的映射。由此PDE自然导出的一个算子是 $\textcolor{blue}{\G^\dagger:A \to \U,a\mapsto \LL_a^{-1}f=:u}$，它将参数映射到解，即 $a \mapsto u$。我们在第 \ref{ssec:darcy} 节中进一步研究的一个简单例子是：当 $\LL_a$ 是二阶椭圆算子 $-\nabla \cdot (a \nabla)$ 在齐次Dirichlet边界条件下的弱形式（weak form）时。在此设定下，$\A = L^\infty(D;\R_+)$，$\U = H^1_0(D;\R)$，以及 $\U^* = H^{-1}(D;\R)$。若有必要，我们将假设区域 $D$ 被离散化为 $K \in \N$ 个点，并且我们观测到 $N \in \N$ 组系数函数与（近似）解函数的配对数据 $\{a^{(i)}, u^{(i)}\}_{i=1}^N$，这些数据将用于模型训练（见第 \ref{sec:PS} 节）。我们假设 $a^{(i)}$ 是从支撑在 $\A$ 上的概率测度 $\mu$ 中独立同分布（i.i.d., independent and identically distributed）采样的样本，而 $u^{(i)}$ 是在 $\G^\dagger$ 下的前推（pushforward）像。
 
-\subsection{Problem Setting}
+
+\vspace{1cm}
+
+\subsection{问题设定}
 \label{sec:PS}
 
 % {\bf State the problem as supervised learning between Banach spaces of
@@ -29,103 +33,84 @@ and that we observe $N \in \N$ pairs of coefficient functions and (approximate) 
 % (Maybe discuss how to generalize at the end of the paper). No reference 
 % to any specific PDE here.}
 
-
-
-Our goal is to learn a mapping between two infinite dimensional spaces by using a finite
-collection of observations of input-output pairs from this mapping. We make this problem concrete in the following setting. Let \(\A\) and \(\U\) 
-be Banach spaces of functions defined on bounded domains $D \subset \R^d$, $D' \subset \R^{d'}$ respectively and \(\Ftrue : \A \to \U\) be
-a (typically) non-linear map. Suppose we have observations \(\{a^{(i)}, u^{(i)}\}_{i=1}^N\) where 
-\(a^{(i)} \sim \mu\) are i.i.d. samples drawn from some probability measure \(\mu\) supported on 
-\(\A\) and \(u^{(i)} = \Ftrue(a^{(i)})\) is possibly corrupted with noise. We aim to build an approximation of \(\Ftrue\) by 
-constructing a parametric map 
+我们的目标是通过使用有限数量的输入-输出对观测数据，来学习两个无限维空间之间的映射。我们将此问题具体化为以下设定。设 $\A$ 和 $\U$ 分别为定义在有界区域 $D \subset \R^d$、$D' \subset \R^{d'}$ 上的函数构成的巴拿赫空间（Banach spaces），且 $\Ftrue : \A \to \U$ 是一个（通常是）非线性映射（non-linear map）。假设我们有一组观测数据 $\{a^{(i)}, u^{(i)}\}_{i=1}^N$，其中 $a^{(i)} \sim \mu$ 是从支撑在 $\A$ 上的某个概率测度（probability measure）$\mu$ 中独立同分布（i.i.d.）抽取的样本，而 $u^{(i)} = \Ftrue(a^{(i)})$ 可能受到噪声污染。我们的目标是通过构造一个参数化的映射
 \begin{equation}
 \label{eq:approxmap2}
 \F_{\theta} : \A \to \U, \quad \theta \in \R^p
 \end{equation}
-with parameters from the finite-dimensional space \(\R^p\) and then choosing
-\(\theta^\dagger \in \R^p\) so that \(\F_{\theta^\dagger} \approx \Ftrue\).
+其中参数来自有限维空间 $\R^p$，然后选择适当的参数 $\theta^\dagger \in \R^p$，使得 $\F_{\theta^\dagger} \approx \Ftrue$。
 
-We will be interested in controlling the error of the approximation on average with respect to \(\mu\). In particular, assuming \(\G^\dagger\) is \(\mu\)-measurable, we will aim to control
-the \(L^2_\mu(\A;\U)\) Bochner norm of the approximation
+我们希望在关于 $\mu$ 的平均意义下控制近似误差。特别地，假设 $\G^\dagger$ 是 $\mu$-可测的（$\mu$-measurable），我们旨在控制近似在 $L^2_\mu(\A;\U)$ Bochner 范数下的误差：
 \begin{equation}
 \label{eq:bochner_error}
 \|\G^\dagger - \G_\theta\|^2_{L^2_\mu(\A;\U)} = \E_{a \sim \mu} \|\G^\dagger(a) - \G_\theta(a)\|_{\U}^2 = \int_\A \|\G^\dagger(a) - \G_\theta(a)\|_{\U}^2 \: d \mu (a).
 \end{equation}
-This is a natural framework for learning in infinite-dimensions as one could seek to solve the associated  empirical-risk minimization problem
+这是一个自然的无限维学习框架，因为可以求解相应的经验风险最小化问题（empirical-risk minimization problem）：
 \begin{equation}
 \label{eq:empirical_risk}
 \min_{\theta \in \R^p} \E_{a \sim \mu} \|\G^\dagger(a) - \G_\theta(a)\|_{\U}^2 \approx \min_{\theta \in \R^p} \frac{1}{N} \sum_{i=1}^N \|u^{(i)} - \G_\theta(a^{(i)})\|_{\U}^2
 \end{equation}
-which directly parallels the classical finite-dimensional 
-setting \citep{Vapnik1998}. 
-\nk{As well as using error measured in the Bochner norm, we 
-will also consider the setting where error is measured uniformly over compact sets of \(\A\). In particular, given any \(K \subset \A\) compact, we consider
+这直接平行于经典的有限维情形 \citep{Vapnik1998}。
+\nk{除了使用 Bochner 范数度量误差外，我们还将考虑在 $\A$ 的紧集上一致度量误差的情形。具体而言，对于任意紧集 $K \subset \A$，我们考虑
 \begin{equation}
     \label{eq:unform_risk}
     \sup_{a \in K} \|\G^\dagger (a) - \G_\theta (a) \|_\U
 \end{equation}
-which is a more standard error metric in the approximation theory literature. Indeed, the classic approximation theory of neural networks in formulated analogously to equation \eqref{eq:unform_risk} \citep{hornik1989multilayer}. }
-
-In Section~\ref{sec:approximation} we show that, for the
-architecture we propose and given any desired error tolerance, there exists \(p \in \N\) and an associated parameter \(\theta^\dagger \in \R^p\), so that the loss \eqref{eq:bochner_error} or \eqref{eq:unform_risk} is less
-than the specified tolerance. However, we do not address the challenging open problems of characterizing the error with respect to either (a) a fixed parameter dimension \(p\) or (b) a fixed number of training samples \(N\). Instead, we approach this in the empirical test-train setting where we minimize \eqref{eq:empirical_risk} based on a fixed training set and approximate \eqref{eq:bochner_error} from new samples that were not seen during training.   
-Because we conceptualize our methodology in the
-infinite-dimensional setting, all finite-dimensional approximations
-can share a common set of network parameters which are defined in the (approximation-free) infinite-dimensional setting. In particular, our architecture does not depend on the way the functions \(a^{(i)},u^{(i)}\) are discretized.
-. The notation used through out this paper,
-along with a useful summary table, may be found in
-Appendix \ref{sec:appendix_notation}.
+这是逼近论（approximation theory）文献中更标准的误差度量方式。事实上，经典的神经网络逼近理论正是以类似于公式 \eqref{eq:unform_risk} 的形式表述的 \citep{hornik1989multilayer}。}
 
 
-\iffalse
-To be concrete, we consider  Banach
-spaces of real-valued functions defined on a bounded open set $D$ in $\mathbb{R}^d$. We then consider
-mappings $\Ftrue$ which take input functions defined on $D$ and map them to 
-another set of functions, also defined on $D$.
-Generalizations, in which the input and output functions are defined
-over different domains, are straightforward conceptually, but not studied.
-in this paper.
-\fi 
+在第~\ref{sec:approximation}节中，我们将证明，对于我们所提出的网络结构，只要给定任意期望的误差容限（error tolerance），就存在一个参数维数 $p \in \N$ 以及相应的参数 $\theta^\dagger \in \R^p$，使得损失 \eqref{eq:bochner_error} 或 \eqref{eq:unform_risk} 小于指定的容限。然而，我们并未解决以下两个具有挑战性的开放问题：(a) 在固定参数维度 $p$ 下的误差刻画，或 (b) 在固定训练样本数量 $N$ 下的误差刻画。相反，我们在经验性的训练-测试（empirical test-train）框架下进行研究，即基于一个固定的训练集最小化 \eqref{eq:empirical_risk}，并通过训练过程中未见过的新样本去近似估计 \eqref{eq:bochner_error}。
+
+由于我们将方法论建立在无限维（infinite-dimensional）框架下，所有有限维近似都可以共享一组在（无近似的）无限维设定中定义的公共网络参数。特别地，我们的网络结构不依赖于函数 $a^{(i)},u^{(i)}$ 的离散化方式。
+
+本文中使用的符号表示，以及一个有用的汇总表格，可在附录 \ref{sec:appendix_notation} 中找到。
+
+\vspace{1cm}
 
 
-\subsection{Discretization}
+\subsection{Discretization(离散化)}
 \label{sec:discretization}
-Since our data \(a^{(i)}\) and \(u^{(i)}\) are, in general, functions, to work with them numerically, we assume access only to their point-wise evaluations. To illustrate this, we will continue with the example of the preceding paragraph. For simplicity, assume \(D = D'\) and suppose that the input and output functions are both real-valued. Let \(D^{(i)} = \{x^{(i)}_{\ell}\}_{\ell=1}^L \subset D\) be a \(L\)-point discretization of the domain \(D\) and assume we have observations \(a^{(i)}|_{D^{(i)}}, u^{(i)}|_{D^{(i)}} \in \R^{L}\), for a finite collection  of input-output pairs indexed by $j$.
-In the next section, we propose a kernel inspired graph neural network architecture which, while trained on the discretized data, can produce the solution \(u(x)\) for any \(x \in D\) given an input \(a \sim \mu\). \nk{In particular, our discretized architecture maps into the space \(\U\) and not into a discretization thereof. Furthermore our parametric operator class is consistent, in that, given a fixed set of parameters, refinement of the input discretization converges to the true functions space operator. We make this notion precise in what follows and refer to architectures that possess it as function space architectures, 
-mesh-invariant architectures, or \textit{discretization-invariant} architectures.
-\footnote{\nk{Note that the meaning of the indexing of sets $D_{\bullet}$ in the following
-definition differs that used earlier in this paragraph.}}
+
+由于我们的数据 $a^{(i)}$ 和 $u^{(i)}$ 通常是函数，为了进行数值计算，我们假设只能访问它们在某些点上的逐点（point-wise）取值。为了说明这一点，我们将继续上一段的例子。为简便起见，假设 $D = D'$，并设输入和输出函数均为实值函数。令 $D^{(i)} = \{x^{(i)}_{\ell}\}_{\ell=1}^L \subset D$ 为区域 $D$ 的一个包含 $L$ 个点的离散化（discretization），并假设我们观测到了一组有限的输入-输出对（以 $j$ 索引）的值 $a^{(i)}|_{D^{(i)}}, u^{(i)}|_{D^{(i)}} \in \R^{L}$。
+
+在下一节中，我们将提出一种受核方法启发的图神经网络（graph neural network）结构，该结构虽然在离散化数据上进行训练，但给定一个来自分布 $\mu$ 的输入 $a$，即可输出任意位置 $x \in D$ 处的解 $u(x)$。\nk{特别地，我们的离散化架构映射到空间 $\U$ 本身，而不是其离散化版本。此外，我们的参数化算子类是具有一致性（consistent）的：给定一组固定的参数，当输入的离散化被不断细化时，其结果会收敛到真实的函数空间算子。我们将在下文中精确阐述这一概念，并将具备此性质的架构称为函数空间架构（function space architectures）、网格不变架构（mesh-invariant architectures）或\textit{离散化不变}（discretization-invariant）架构。
+\footnote{\nk{请注意，下文定义中集合 $D_{\bullet}$ 的索引方式与本段前文所用的不同。}}}
+
 \begin{definition}
-We call a \textit{discrete refinement} of the domain \(D \subset \R^d\) any sequence of nested sets \(D_1 \subset D_2 \subset \dots \subset D\) with \(|D_L| = L\) for any \(L \in \N\) such that, for any \(\epsilon > 0\), there exists a number \(L = L(\epsilon) \in \N\) such that
+我们称任何一组嵌套集合序列 $D_1 \subset D_2 \subset \dots \subset D$为域 $D \subset \R^d$ 的一个\textcolor{red}{离散细化}（discrete refinement），如果 $|D_L| = L$ 对于任意 $L \in \N$ 成立，并且对于任意 $\epsilon > 0$，存在一个数 $L = L(\epsilon) \in \N$，使得
 \[D \subseteq \bigcup_{x \in D_L} \{y \in \R^d : \|y - x\|_2 < \epsilon\}.\]
 \end{definition}
+
 \begin{definition}
-Given a discrete refinement \((D_L)_{L=1}^\infty\) of the domain \(D \subset \R^d\), any member \(D_L\) is called a \textit{discretization} of \(D\).
+给定域 $D \subset \R^d$ 的一个离散细化 $(D_L)_{L=1}^\infty$，其中任意一个成员 $D_L$ 被称为 $D$ 的一个\textcolor{red}{离散化}（discretization）。
 \end{definition}
-%%%%%%%%
-Since $a:D \subset \R^d \to \R^m$, pointwise evaluation of the
-function (discretization) at a set of $L$ points gives rise to
-the data set $\{(x_{\ell}, a(x_{\ell}))\}_{\ell=1}^L.$ Note that this
-may be viewed as a vector in $\R^{Ld} \times \R^{Lm}.$ An example of the mesh refinement is given in Figure \ref{fig:discretization-invariance}.
+
+
+
+由于 $a:D \subset \R^d \to \R^m$，在 $L$ 个点上对该函数进行逐点求值（离散化）会得到数据集 $\{(x_{\ell}, a(x_{\ell}))\}_{\ell=1}^L.$ 注意，这可以被视为 $\R^{Ld} \times \R^{Lm}$ 中的一个向量。图 \ref{fig:discretization-invariance} 给出了一个网格细化（mesh refinement）的例子。
 %%%%%%%%
 \begin{definition}
-Suppose \(\A\) is a Banach space of \(\R^m\)-valued functions on the domain \(D \subset \R^d\). Let \(\G : \A \to \U\) be an operator, \(D_L\) be an \(L\)-point discretization of \(D\), and \(\hat{\G} : \R^{Ld} \times \R^{Lm} \to \U\) some map. For any \(K \subset \A\) compact, we define the \textit{discretized uniform risk} as
+假设 $\A$ 是定义在区域 $D \subset \R^d$ 上的取值于 $\R^m$ 的函数构成的巴拿赫空间（Banach space）。令 $\G : \A \to \U$ 是一个算子，$D_L$ 是 $D$ 的一个包含 $L$ 个点的离散化（discretization），且 $\hat{\G} : \R^{Ld} \times \R^{Lm} \to \U$ 为某个映射。对于任意紧集 $K \subset \A$，我们定义\textcolor{red}{离散化的一致风险}（discretized uniform risk）为
 \[R_K (\G,\hat{\G},D_L) = \sup_{a \in K} \|\hat{\G}(D_L,a|_{D_L}) - \G(a) \|_{\U}.\]
 \end{definition}
 %%%%%%%%
 %%%%%%%%
 
-
-
 \begin{definition}\label{def:discretization_invariance}
-Let \(\Theta \subseteq \R^p\) be a finite dimensional parameter space and \(\G : \A \times \Theta \to \U\) a map representing a parametric class of operators with parameters \(\theta \in \Theta\). Given a discrete refinement \((D_n)_{n=1}^\infty\) of the domain \(D \subset \R^d\), we say \(\G\) is \textit{discretization-invariant} if there exists a sequence of maps \(\hat{\G}_1, \hat{\G}_2, \dots\) where \(\hat{\G}_L : \R^{Ld} \times \R^{Lm} \times \Theta \to \U\) such that, for any \(\theta \in \Theta\) and any compact set \(K \subset \A\),
+设 $\Theta \subseteq \R^p$ 为一个有限维参数空间，$\G : \A \times \Theta \to \U$ 是一个参数化算子类（parametric class of operators）【比如说含参数$\theta$的神经算子族】，其参数为 $\theta \in \Theta$。给定区域 $D \subset \R^d$ 的一个离散细化（discrete refinement）$(D_n)_{n=1}^\infty$，我们称 $\G$ 是\textcolor{red}{离散化不变}（discretization-invariant）的，如果存在一系列映射 $\hat{\G}_1, \hat{\G}_2, \dots$，其中 $\hat{\G}_L : \R^{Ld} \times \R^{Lm} \times \Theta \to \U$，使得对于任意 $\theta \in \Theta$ 和任意紧集 $K \subset \A$，
 \[\lim_{L \to \infty} R_K(\G(\cdot,\theta), \hat{\G}_L(\cdot,\cdot,\theta),D_L) = 0.\]
 \end{definition}
-We prove that the architectures proposed in Section~\ref{sec:neuraloperators} are discretization-invariant. % in Section~\ref{sec:discritizational_invariance}.
-We further verify this claim numerically by showing that the approximation error is 
-approximately constant as we refine the discretization.}
-Such a property is highly desirable as it allows a transfer of solutions between different grid geometries and discretization sizes with a single architecture that has a fixed number of parameters. 
+我们证明了在第~\ref{sec:neuraloperators}节中提出的架构是离散化不变的。% in Section~\ref{sec:discritizational_invariance}.
+我们还通过数值实验验证了这一性质，即当网格被不断细化时，近似误差近似保持不变。
 
-%This desirable property is not shared with neural networks, which are maps between finite-dimensional spaces, and recently proposed DeepONet models that are maps from finite-dimensional to infinite-dimensional spaces. In this work, we propose a modified DeepONet architecture, DeepONet-Operator that are full-stack neural operators, resulting in a model with the discretization invariance property. The proposed definition of discretization invariance is a generic definition and considers conventional neural networks such as CNNs discretization invariant models when they are accompanied by grid interpolation in the input. An additional interpolation layer in the output makes these models maps between infinite dimensional spaces. 
 
-We note that, while the application of our methodology is based on having point-wise evaluations of the function, it is not limited by it. One may, for example, represent a function numerically as a finite set of truncated basis coefficients. Invariance of the representation would then be with respect to the size of this set. Our methodology can, in principle, be modified to accommodate this scenario through a suitably chosen architecture. We do not pursue this direction in the current work. From the construction of neural operators, when the input and output functions are evaluated on fixed grids, the architecture of neural operators on these fixed grids coincide with the class of neural networks. 
+% 这种性质非常理想，因为它允许使用一个具有固定参数数量的单一架构，在不同网格几何形状和不同离散化规模之间转移解。
+
+% 这一理想特性是传统神经网络所不具备的，传统神经网络是有限维空间之间的映射，而最近提出的 DeepONet 模型则是从有限维到无限维空间的映射。在本研究中，我们提出了一种改进的 DeepONet 架构，即 DeepONet-Operator，它是一种全栈神经算子（full-stack neural operators），从而得到一个具有离散化不变性质的模型。本文提出的离散化不变性的定义是一个通用定义，当传统的神经网络（如 CNNs）配合输入端的网格插值（grid interpolation）时，也可被视为离散化不变模型。在输出端增加一个插值层可使这些模型成为无限维空间之间的映射。
+
+
+这种性质非常理想，因为它允许使用一个具有固定参数数量的单一架构，在不同网格几何形状和不同离散化规模之间转移解。
+
+这一理想特性是传统神经网络所不具备的，传统神经网络是有限维空间之间的映射（maps between finite-dimensional spaces），而最近提出的 DeepONet 模型则是从有限维到无限维空间的映射（maps from finite-dimensional to infinite-dimensional spaces）。在本研究中，我们提出了一种改进的 DeepONet 架构，称为 DeepONet-Operator，它是一种全栈神经算子（full-stack neural operators），从而得到一个具有离散化不变性（discretization invariance）的模型。本文提出的离散化不变性的定义是一个通用定义，当传统的神经网络（如 CNNs）配合输入端的网格插值（grid interpolation）时，也可被视为离散化不变模型。在输出端增加一个插值层可使这些模型成为无限维空间之间的映射。
+
+我们注意到，虽然我们方法的应用基于函数的逐点取值（point-wise evaluations），但并不局限于这种情况。例如，人们也可以将函数用一组有限的截断基函数系数（truncated basis coefficients）来数值表示。此时，表示的不变性就体现在该系数集合的大小上。原则上，可以通过设计合适的架构来修改我们的方法以适应这种情况。在当前工作中，我们并未探讨这一方向。从神经算子（neural operators）的构造来看，当输入和输出函数在固定的网格上被求值时，这些固定网格上的神经算子架构与一类神经网络是重合的。

@@ -1,116 +1,133 @@
-\section{Parameterization and Computation}
+\newpage
+\section{参数化与计算 (Parameterization and Computation)}
 \label{sec:four_schemes}
-In this section, we discuss various ways of parameterizing the infinite dimensional architecture \eqref{eq:F}, Figure~\ref{fig:NO_architecture}. The goal is to find
-an intrinsic infinite dimensional parameterization that achieves
-small error (say $\eps$), and then rely on numerical approximation to ensure that this parameterization  delivers an error of the same
-magnitude (say $2\eps$), for all
-data discretizations fine enough. In this way the number of parameters used to achieve ${\mathcal O}(\eps)$ error is independent of the data discretization. In many applications we have in mind the data
-discretization is something we can control, for example when
-generating input/output pairs from solution of partial
-differential equations via numerical simulation. The proposed
-approach allows us to train a neural operator approximation
-using data from different discretizations, and to predict with
-discretizations different from those used in the data, all by
-relating everything to the underlying infinite dimensional
-problem.
 
+在本节中，我们讨论对无限维架构 \eqref{eq:F}（见图~\ref{fig:NO_architecture}）进行参数化的多种方式。目标是找到一种\textbf{内在的无限维参数化}（intrinsic infinite dimensional parameterization），使其能达到较小的误差（例如 $\eps$），然后依赖数值近似方法，确保该参数化在所有足够精细的数据离散化下所产生的误差保持在同一量级（例如 $2\eps$）。通过这种方式，实现 ${\mathcal O}(\eps)$ 误差所需的参数数量将\textbf{与数据离散化无关}。在我们所考虑的许多应用场景中，数据离散化是我们可以控制的——例如，当通过数值模拟求解偏微分方程来生成输入/输出数据对时。所提出的这一方法允许我们使用来自不同离散化的数据训练神经算子，并在不同于训练数据所用离散化的网格上进行预测，这一切都通过将其关联到底层的无限维问题而得以实现。
 
-We also discuss the computational complexity of the proposed parameterizations and suggest algorithms which yield efficient numerical methods for approximation. Subsections~\ref{sec:graphneuraloperator}-\ref{sec:fourier} delineate each of the proposed methods.
+我们还将讨论所提出参数化的计算复杂度，并给出能够产生高效数值逼近算法的建议。第~\ref{sec:graphneuraloperator} 至第~\ref{sec:fourier} 小节分别详述了每种提议的方法。
 
-To simplify notation, we will only consider a single layer of \eqref{eq:F} i.e. \eqref{eq:onelayer} and choose the input and output domains to be the same. Furthermore, we will drop the layer index \(t\) and write the single layer update as
+为简化记号，我们仅考虑 \eqref{eq:F} 中的单层结构，即 \eqref{eq:onelayer}，并假设输入与输出定义在相同的区域上。此外，我们将省略层索引 $t$，并将单层更新写作
 \begin{equation}
     \label{eq:onelayercompute}
-    u(x) = \sigma \left ( W v(x) + \int_D \kappa (x,y) v(y) \: \text{d}\nu(y) + b(x) \right ) \qquad \forall x \in D
+    u(x) = \sigma \left ( W v(x) + \int_D \kappa (x,y) v(y) \: \text{d}\nu(y) + b(x) \right ) \qquad \forall x \in D,
 \end{equation}
-where \(D \subset \R^d\) is a bounded domain, \(v: D \to \R^n\) is the input function and \(u: D \to \R^m\) is the output function. 
-\done{Should we comment that little changes if domains of $v$ and $u$
-are different?} 
-When the domain domains $D$ of $v$ and $u$ are different, we will usually extend them to be on a larger domain.  
-We will consider \(\sigma\) to be fixed, and, for the time being, take \(\text{d} \nu(y) = \text{d} y\) to be the Lebesgue measure on \(\R^d\). Equation \eqref{eq:onelayercompute} then leaves three objects which can be parameterized: \(W\), \(\kappa\), and \(b\). Since \(W\) is linear and acts only locally on \(v\), we will always parametrize it by the values of its associated \(m \times n\) matrix; hence \(W \in \R^{m \times n}\) yielding \(mn\) parameters. 
-We have found empirically that letting \(b: D \to \R^m\) be a constant function over any domain \(D\) works at least as well as allowing it to be an arbitrary neural network. Perusal of the proof of Theorem~\ref{thm:main_compact} shows that we do not lose any approximation power by doing this, and we reduce the total number of parameters in the architecutre. Therefore we will always parametrize \(b\) by the entries of a fixed \(m\)-dimensional vector; in particular, \(b \in \R^m\) yielding \(m\) parameters. Notice that both parameterizations are independent of any discretization of \(v\). 
+其中 $D \subset \R^d$ 是一个有界区域，$v: D \to \R^n$ 是输入函数，$u: D \to \R^m$ 是输出函数。
+\done{是否应说明：若 $v$ 和 $u$ 的定义域不同，只需做少量修改？}
+当 $v$ 和 $u$ 的定义域 $D$ 不同时，我们通常会将它们延拓至一个更大的公共区域。
 
-%Perusal of the proof of Theorem~\ref{thm:functional_chen}, shows that we do not loose any approximation power by letting \(b : D \to \R^m\) be a constant function \ams{over domain $D$.} Therefore we will always parametrize \(b\) by the entries of a fixed \(m\)-dimensional vector; in particular, \(b \in \R^m\) yielding \(m\) parameters. Notice that both parameterizations are independent of any discretization of \(v\). 
+我们将视激活函数 $\sigma$ 为固定的，并暂时取 $\text{d} \nu(y) = \text{d} y$ 为 $\R^d$ 上的勒贝格测度（Lebesgue measure）。于是，式 \eqref{eq:onelayercompute} 中尚有三个可参数化的对象：$W$、$\kappa$ 和 $b$。由于 $W$ 是线性的且仅对 $v$ 进行局部作用，我们始终通过其对应的 $m \times n$ 矩阵的元素对其进行参数化；因此\underline{ $W \in \R^{m \times n}$}，共引入 $mn$ 个参数。
 
-The rest of this section will be dedicated to choosing the kernel function \(\kappa : D \times D \to \R^{m \times n}\) and the computation of the associated integral kernel operator. For clarity of exposition, we consider only the simplest proposed version of this operator \eqref{eq:kernelop1} but note that similar ideas may also be applied to \eqref{eq:kernelop2} and \eqref{eq:kernelop3}. Furthermore, in order to focus on learning the kernel $\kappa$, here we drop \(\sigma\), \(W\), and \(b\) from \eqref{eq:onelayercompute} and simply consider the linear update
+我们通过实验发现，令 \underline{$b: D \to \R^m$ 为定义在任意区域 $D$ 上的常值函数}，其效果至少不逊于让 $b$ 为任意神经网络。对定理~\ref{thm:main_compact} 证明的仔细考察表明，这样做并不会损失任何逼近能力（approximation power），同时还能减少架构中的总参数数量。因此，我们始终将 $b$ 参数化为一个固定的 $m$ 维向量的元素；具体而言，$b \in \R^m$，引入 $m$ 个参数。注意，上述两种参数化方式均\textbf{不依赖于 $v$ 的任何离散化}。
+
+% 对定理~\ref{thm:functional_chen} 证明的仔细考察表明，令 $b : D \to \R^m$ 为常值函数 \ams{（在区域 $D$ 上）} 并不会损失任何逼近能力。因此我们始终将 $b$ 参数化为一个固定的 $m$ 维向量的元素；具体而言，$b \in \R^m$，引入 $m$ 个参数。注意，上述两种参数化方式均不依赖于 $v$ 的任何离散化。
+
+
+本节剩余部分将专注于核函数 $\kappa : D \times D \to \R^{m \times n}$ 的选取及其对应的积分核算子的计算。为清晰起见，我们仅考虑该算子最简单的形式 \eqref{eq:kernelop1}，但需指出，类似思路也可应用于 \eqref{eq:kernelop2} 和 \eqref{eq:kernelop3}。此外，为聚焦于核函数 $\kappa$ 的学习，此处我们从 \eqref{eq:onelayercompute} 中省略 $\sigma$、$W$ 和 $b$，仅考虑线性更新：
 \begin{equation}
     \label{eq:onelayerlinear}
     u(x) = \int_D \kappa(x,y) v(y) \: \text{d} \nu(y) \qquad \forall x \in D.
 \end{equation}
-To demonstrate the computational challenges associated with \eqref{eq:onelayerlinear}, let \(\{x_1,\dots,x_J\} \subset D\) be a uniformly-sampled \(J\)-point discretization of \(D\). Recall that we assumed \(\text{d} \nu(y) = \text{d} y\) and, for simplicity, suppose that \(\nu(D)=1\), then the Monte Carlo approximation of \eqref{eq:onelayerlinear} is
+
+为说明与 \eqref{eq:onelayerlinear} 相关的计算挑战，设 $\{x_1,\dots,x_J\} \subset D$ 为区域 $D$ 上均匀采样的 $J$ 点离散化。回顾我们假设 $\text{d} \nu(y) = \text{d} y$，且为简化起见，假设 $\nu(D)=1$，则 \eqref{eq:onelayerlinear} 的\textbf{蒙特卡洛}（Monte Carlo）近似为
 %
 \begin{equation}
     \label{eq:onelayerlinear_MC}
-    u(x_j) = \frac{1}{J} \sum_{l=1}^J \kappa(x_j, x_l) v(x_l), \qquad j=1,\dots,J
+    u(x_j) = \frac{1}{J} \sum_{l=1}^J \kappa(x_j, x_l) v(x_l), \qquad j=1,\dots,J.
 \end{equation}
-% Riemann sum
-The integral in \eqref{eq:onelayerlinear} can be approximated using any other integral approximation methods, including the celebrated Riemann sum for which $u(x_j) = \sum_{l=1}^J \kappa(x_j, x_l) v(x_l)\Delta x_l$ and $\Delta x_l$ is the Riemann sum coefficient associated with $\nu$ at $x_l$. For the approximation methods, to compute \(u\) on the entire grid requires \(\mathcal{O}(J^2)\) matrix-vector multiplications. Each of these matrix-vector multiplications requires \(\mathcal{O}(mn)\) operations; for the rest of the discussion, we treat \(mn = \mathcal{O}(1)\) as constant and consider only the cost with respect to \(J\) the discretization parameter since $m$ and $n$ are fixed by
-the architecture choice whereas $J$ varies depending on
-required discretization accuracy and hence may be arbitrarily
-large. This cost is not specific to the Monte Carlo approximation but is generic for quadrature rules which use the entirety of the data. Therefore, when \(J\) is large, computing \eqref{eq:onelayerlinear} becomes intractable and new ideas are needed in order to alleviate this. Subsections~\ref{sec:graphneuraloperator}-\ref{sec:fourier} propose different approaches to the solution to this problem,
-inspired by classical methods in numerical analysis.  We finally remark that, in contrast, computations with \(W\), \(b\), and \(\sigma\) only require \(\mathcal{O}(J)\) operations which justifies our focus on computation with the kernel integral operator.
+% 黎曼和（Riemann sum）
+当然，\eqref{eq:onelayerlinear} 中的积分也可用其他积分近似方法计算，包括著名的黎曼和（Riemann sum），其形式为 $u(x_j) = \sum_{l=1}^J \kappa(x_j, x_l) v(x_l)\Delta x_l$，其中 $\Delta x_l$ 是与测度 $\nu$ 在点 $x_l$ 处对应的黎曼和系数。
 
-\paragraph{Kernel Matrix.} It will often times be useful to consider the kernel matrix associated to \(\kappa\) for the discrete points \(\{x_1,\dots,x_J\} \subset D\). We define the kernel matrix \(K \in \R^{mJ \times nJ}\) to be the \(J \times J\) block matrix with each block given by the value of the kernel i.e. 
-\[K_{jl} = \kappa(x_j, x_l) \in \R^{m \times n}, \qquad j,l=1,\dots,J\]
-where we use \((j,l)\) to index an individual block rather than a matrix element. Various numerical algorithms for the efficient computation of \eqref{eq:onelayerlinear} can be derived based on assumptions made about the structure of this matrix, for example, bounds on its rank or sparsity.
+对于上述各类近似方法，要在整个网格上计算 $u$ 需要\underline{ $\mathcal{O}(J^2)$ 次矩阵-向量乘法}。每次这样的乘法运算需要 $\mathcal{O}(mn)$ 次操作；在后续讨论中，我们将 $mn = \mathcal{O}(1)$ 视为常数，仅关注关于离散化参数 $J$ 的计算代价——因为 $m$ 和 $n$ 由架构设计固定，而 $J$ 则随所需离散化精度变化，可能任意大。这一 $\mathcal{O}(J^2)$ 的代价并非蒙特卡洛近似所特有，而是所有使用全部数据点的数值积分规则（quadrature rules）所共有的。因此，当 $J$ 很大时，直接计算 \eqref{eq:onelayerlinear} 将变得不可行，亟需新思路以缓解这一计算瓶颈。
 
-\subsection{Graph Neural Operator (GNO)}
+第~\ref{sec:graphneuraloperator} 至第~\ref{sec:fourier} 小节提出了若干解决该问题的不同方法，其灵感来源于经典数值分析中的技术。最后我们指出，相比之下，\underline{对 $W$、$b$ 和 $\sigma$ 的计算仅需 $\mathcal{O}(J)$ 次}操作，这也进一步说明了我们将计算重点放在积分核算子上的合理性。
+
+
+\vspace{1cm}
+\subsection{核矩阵（Kernel Matrix）}  
+
+
+在许多情况下，考虑与核函数 $\kappa$ 相关联、对应于离散点 $\{x_1,\dots,x_J\} \subset D$ 的核矩阵将非常有用。我们定义核矩阵 $K \in \R^{mJ \times nJ}$ 为一个分为 $J \times J$ 块的分块矩阵，其中每个分块是核函数在离散点上的取值（是一个矩阵），即
+\[
+K_{jl} = \kappa(x_j, x_l) \in \R^{m \times n}, \qquad j,l=1,\dots,J,
+\]
+这里我们用 $(j,l)$ 来索引一个分块（block），而非单个矩阵元素。基于对该矩阵结构的假设（例如秩的上界或稀疏性），可以导出多种用于高效计算 \eqref{eq:onelayerlinear} 的数值算法。
+
+
+\vspace{2cm}
+
+\subsection{图神经算子（Graph Neural Operator, GNO）}
 \label{sec:graphneuraloperator}
 
-We first outline the Graph Neural Operator (GNO) which approximates \eqref{eq:onelayerlinear} by combining a Nystr\"om approximation with domain truncation and is implemented with the standard framework of graph neural networks. This construction was originally proposed in \cite{li2020neural}.
+我们首先介绍\textbf{图神经算子}（Graph Neural Operator, GNO），它通过结合 Nystr\"om 近似与区域截断（domain truncation）来逼近 \eqref{eq:onelayerlinear}，并采用标准的图神经网络（graph neural network）框架实现。该构造最初由 \cite{li2020neural} 提出。
 
-\paragraph{Nystr\"om Approximation. }
-A simple yet effective method to alleviate the cost of computing \eqref{eq:onelayerlinear} is employing a Nystr\"om approximation. This amounts to sampling uniformly at random the points over which we compute the output function \(u\). In particular, let \(x_{k_1},\dots,x_{k_{J'}} \subset \{x_1,\dots,x_J\}\) be \(J' \ll J\) randomly selected points and, assuming \(\nu(D) = 1\), approximate \eqref{eq:onelayerlinear} by
-\[u(x_{k_j}) \approx \frac{1}{J'} \sum_{l=1}^{J'} \kappa(x_{k_j}, x_{k_l}) v(x_{k_l}), \qquad j=1,\dots,J'.\]
-We can view this as a low-rank approximation to the kernel matrix \(K\), in particular,
+\paragraph{Nystr\"om 近似（Nystr\"om Approximation）}  
+一种简单而有效的方法来缓解计算 \eqref{eq:onelayerlinear} 的高昂代价是采用 \textbf{Nystr\"om 近似}。其核心思想是：仅在随机选取的一小部分点上计算输出函数 $u$。具体而言，设 $x_{k_1},\dots,x_{k_{J'}} \subset \{x_1,\dots,x_J\}$ 为从中随机选取的 $J' \ll J$ 个点，并假设 $\nu(D) = 1$，则可将 \eqref{eq:onelayerlinear} 近似为
+\[
+u(x_{k_j}) \approx \frac{1}{J'} \sum_{l=1}^{J'} \kappa(x_{k_j}, x_{k_l}) v(x_{k_l}), \qquad j=1,\dots,J'.
+\]
+这可视为对核矩阵 $K$ 的一种低秩近似。具体地，
 \begin{equation}
     \label{eq:nystrom_matrix}
-    K \approx K_{J J'} K_{J' J'} K_{J' J}
+    K \approx K_{J J'} K_{J' J'} K_{J' J},
 \end{equation}
-where \(K_{J' J'}\) is a \(J' \times J'\) block matrix and \(K_{J J'}\), \(K_{J' J}\) are interpolation matrices, for example, linearly extending the function to the whole domain from the random nodal points. 
-\postponed{This last sentence is unclear for me: aren't all the
-items in above identity matrices? How can two of them
-extend to the whole domain?} 
-\postponed{Response: sorry which are identity matrices?}
-The complexity of this computation is \(\mathcal{O}(J'^2)\) hence it remains quadratic but only in the number of subsampled points \(J'\) which we assume is much less than the number of points \(J\) in the original  discretization. 
+其中 $K_{J' J'}$ 是一个 $J' \times J'$ 的分块矩阵，而 $K_{J J'}$ 与 $K_{J' J}$ 为插值矩阵（interpolation matrices），例如通过线性插值将函数从随机选取的节点点延拓至整个区域。
 
+\postponed{我对最后一句话不太清楚：上述恒等式中的各项不都是矩阵吗？其中两个如何能“延拓到整个区域”？}  
+\postponed{回应：抱歉，你指的是哪些是单位矩阵？}
 
-\paragraph{Truncation. }
-Another simple method to alleviate the cost of computing \eqref{eq:onelayerlinear} is to truncate the integral to a sub-domain of \(D\) which depends on the point of evaluation \(x \in D\). Let \(s : D \to \mathcal{B}(D)\) be a mapping of the points of \(D\) to the Lebesgue measurable subsets of \(D\) denoted \(\mathcal{B}(D)\). Define \(\text{d} \nu (x,y) = \mathds{1}_{s(x)} \text{d}y\) then \eqref{eq:onelayerlinear} becomes
+该计算的复杂度为 $\mathcal{O}(J'^2)$，因此虽然仍是二次的，但仅依赖于子采样点数 $J'$，而我们假设 $J' \ll J$，即远小于原始离散化中的点数 $J$。
+
+\vspace{1cm}
+
+\subsubsection*{截断（Truncation）}
+
+另一种缓解计算~\eqref{eq:onelayerlinear} 代价的简单方法是将积分截断到依赖于求值点 $x \in D$ 的子区域上。令 $s : D \to \mathcal{B}(D)$ 为从 $D$ 中的点映射到 $D$ 的勒贝格可测子集（Lebesgue measurable subsets）$\mathcal{B}(D)$ 的映射。定义测度 $\text{d} \nu (x,y) = \mathds{1}_{s(x)} \text{d}y$，则~\eqref{eq:onelayerlinear} 变为
 \begin{equation}
     \label{eq:onelayertruncation}
-    u(x) = \int_{s(x)} \kappa(x,y) v(y) \: \text{d} y \qquad \forall x \in D.
+\textcolor{red}{    u(x) = \int_{s(x)} \kappa(x,y) v(y) \: \text{d} y \qquad \forall x \in D.}
 \end{equation}
-If the size of each set \(s(x)\) is smaller than \(D\) then the cost of computing \eqref{eq:onelayertruncation} is \(\mathcal{O}(c_sJ^2)\) where \(c_s  < 1\) is a constant depending on \(s\). While the cost remains quadratic in \(J\), the constant \(c_s\) can have a significant effect in practical computations, as we demonstrate in Section~\ref{sec:numerics}. For simplicity and ease of implementation, we only consider \(s(x) = B(x,r) \cap D\) where \(B(x,r) = \{y \in \R^d : \|y - x\|_{\R^d} < r\}\) for some fixed \(r > 0\). With this choice of \(s\) and assuming that \(D = [0,1]^d\), we can explicitly calculate that \(c_s \approx r^d\).
+若每个集合 $s(x)$ 的大小小于 $D$，则计算~\eqref{eq:onelayertruncation} 的代价为 $\mathcal{O}(c_sJ^2)$，其中常数 $c_s < 1$ 依赖于映射 $s$。尽管代价在 $J$ 上仍为二次的，但常数 $c_s$ 在实际计算中可产生显著影响，这一点我们在第~\ref{sec:numerics} 节中予以展示。为简化实现，我们仅考虑 $s(x) = B(x,r) \cap D$，其中 $B(x,r) = \{y \in \R^d : \|y - x\|_{\R^d} < r\}$ 且 $r > 0$ 为固定常数。在此 $s$ 的选取下，并假设 $D = [0,1]^d$，我们可以显式计算出 $c_s \approx r^d$。
 
-Furthermore notice that we do not lose any expressive power when we make this approximation so long as we combine it with composition. To see this, consider the example of the previous paragraph where, if we let \(r=\sqrt{2}\), \done{Isn't $r\geq\sqrt{2}$ critical in Euclidean norm when
-$D=2$ etc.?} then \eqref{eq:onelayertruncation} reverts to \eqref{eq:onelayerlinear}. Pick 
-\(r < 1\) and let \(L \in \N\) with \(L \geq 2\) be the smallest integer such that \(2^{L-1}r \geq 1\). Suppose that \(u(x)\) is computed by composing the right hand side of \eqref{eq:onelayertruncation} \(L\) times with a different kernel every time. The domain of influence of \(u(x)\) is then \(B(x,2^{L-1}r) \cap D = D\) hence it is easy to see that there exist \(L\) kernels such that computing this composition is equivalent to computing \eqref{eq:onelayerlinear} for any given kernel with appropriate regularity. Furthermore the cost of this computation is \(\mathcal{O}(Lr^d J^2)\) and therefore the truncation is beneficial if \(r^d (\log_2 1/r + 1) < 1\)
-which holds for any \(r < 1/2\) when \(d = 1\) and any \(r < 1\) when \(d \geq 2\). Therefore we have shown that we can always reduce the cost of computing \eqref{eq:onelayerlinear} by truncation and composition. From the perspective of the kernel matrix, truncation enforces a sparse, block diagonally-dominant structure at each layer. We further explore the hierarchical nature of this computation using the multipole method in subsection~\ref{sec:multipole}.
+此外请注意，只要我们将截断与复合（composition）结合使用，就不会损失任何表达能力（expressive power）。为说明这一点，考虑上一段的例子：若取 $r=\sqrt{2}$，\done{当 $D$ 为二维时，在欧几里得范数下是否应要求 $r\geq\sqrt{2}$？} 则~\eqref{eq:onelayertruncation} 就退化为~\eqref{eq:onelayerlinear}。现在取 $r < 1$，并令 $L \in \N$ 为满足 $2^{L-1}r \geq 1$ 的最小整数且 $L \geq 2$。假设 $u(x)$ 是通过对~\eqref{eq:onelayertruncation} 右侧表达式进行 $L$ 次复合（每次使用不同的核函数）得到的，则 $u(x)$ 的影响域（domain of influence）为 $B(x,2^{L-1}r) \cap D = D$。因此很容易看出，存在 $L$ 个核函数，使得该复合运算等价于对任意具有适当正则性（regularity）的核函数计算~\eqref{eq:onelayerlinear}。此外，该计算的代价为 $\mathcal{O}(Lr^d J^2)$，因此当满足 $r^d (\log_2 1/r + 1) < 1$ 时，截断是有益的；该不等式在 $d = 1$ 时对任意 $r < 1/2$ 成立，在 $d \geq 2$ 时对任意 $r < 1$ 成立。因此我们已证明：通过截断与复合，总能降低计算~\eqref{eq:onelayerlinear} 的代价。从核矩阵（kernel matrix）的角度来看，截断在每一层都强制引入了一种稀疏的、块对角占优（block diagonally-dominant）的结构。我们将在第~\ref{sec:multipole} 小节中利用多极子方法（multipole method）进一步探讨该计算的层次结构（hierarchical nature）。
 
-Besides being a useful computational tool, truncation can also be interpreted as explicitly building local structure into the kernel \(\kappa\). For problems where such structure exists, explicitly enforcing it makes learning more efficient, usually requiring less data to achieve the same generalization error. Many physical systems such as interacting particles in an electric potential exhibit strong local behavior that quickly decays, making truncation a natural approximation technique. 
+除了作为一种有用的计算工具外，截断还可以被解释为显式地在核函数 $\kappa$ 中引入局部结构（local structure）。对于本身就具有此类结构的问题，显式地施加这种结构可使学习过程更高效，通常在达到相同泛化误差（generalization error）时所需的数据更少。许多物理系统（如处于电势中的相互作用粒子）表现出强烈的局部行为，且这种行为随距离迅速衰减，因此截断是一种自然的近似技术。
 
-\paragraph{Graph Neural Networks. }
-We utilize the standard architecture of message passing graph networks employing edge features as introduced in \cite{gilmer2017neural} to efficiently implement \eqref{eq:onelayerlinear} on arbitrary discretizations of the domain \(D\). To do so, we treat a discretization \(\{x_1,\dots,x_J\} \subset D\) as the nodes of a weighted, directed graph and assign edges to each node using the function \(s : D \to \mathcal{B}(D)\) which, recall from the section on truncation, assigns to each point a domain of integration. In particular, for \(j=1,\dots,J\), we assign the node \(x_j\) the value \(v(x_j)\) and emanate from it edges to the nodes \(s(x_j) \cap \{x_1,\dots,x_J\} = \mathcal{N}(x_j)\) which we call the neighborhood of \(x_j\). If \(s(x) = D\) then the graph is fully-connected. Generally, the sparsity structure of the graph determines the sparsity of the kernel matrix \(K\), indeed, the adjacency matrix of the graph and the block kernel matrix have the same zero entries. The weights of each edge are assigned as the arguments of the kernel. In particular, for the case of \eqref{eq:onelayerlinear}, the weight of the edge between nodes \(x_j\) and \(x_k\) is simply the concatenation \((x_j,x_k) \in \R^{2d}\).  More complicated weighting functions are considered for the implementation of the integral kernel operators \eqref{eq:kernelop2} or \eqref{eq:kernelop3}.
+\vspace{1cm}
 
-With the above definition the message passing algorithm of \cite{gilmer2017neural}, with averaging aggregation, updates the value \(v(x_j)\) of the node \(x_j\) to the value \(u(x_j)\) as 
-\[u(x_j) = \frac{1}{|\mathcal{N}(x_j)|}\sum_{y \in \mathcal{N}(x_j)} \kappa(x_j, y) v(y), \qquad j=1,\dots,J\]
-which corresponds to the Monte-Carlo approximation of the integral \eqref{eq:onelayertruncation}. More sophisticated quadrature rules and adaptive meshes can also be implemented using the general framework of message passing on graphs, see, for example, \cite{pfaff2020learning}. We further utilize this framework in subsection~\ref{sec:multipole}.
+\subsubsection*{图神经网络（Graph Neural Networks）.}
+
+我们采用 \cite{gilmer2017neural} 中引入的、使用边特征（edge features）的标准消息传递图网络（message passing graph networks）架构，以在域 $D$ 的任意离散化上高效实现~\eqref{eq:onelayerlinear}。为此，我们\textcolor{red}{将离散点集 $\{x_1,\dots,x_J\} \subset D$ 视为一个带权有向图的节点，并利用函数 $s : D \to \mathcal{B}(D)$ 为每个节点分配边}——该函数在“截断”一节中已提及，用于为每个点指定积分区域。具体而言，对 $j=1,\dots,J$，我们将节点 $x_j$ 赋值为 $v(x_j)$，并从该节点引出指向节点集合 $s(x_j) \cap \{x_1,\dots,x_J\} = \mathcal{N}(x_j)$ 的边，我们称 $\mathcal{N}(x_j)$ 为 $x_j$ 的邻域（neighborhood）。若 $s(x) = D$，则该图为全连接图（fully-connected）。通常，图的稀疏结构决定了核矩阵 $K$ 的稀疏性；事实上，\textcolor{red}{图的邻接矩阵与分块核矩阵具有相同的零元素位置}。每条边的权重被设为核函数的输入参数。特别地，对于~\eqref{eq:onelayerlinear} 的情形，节点 $x_j$ 与 $x_k$ 之间边的权重即为拼接向量 $(x_j,x_k) \in \R^{2d}$。对于积分核算子~\eqref{eq:kernelop2} 或~\eqref{eq:kernelop3} 的实现，则会考虑更复杂的加权函数。
+
+在上述定义下，\cite{gilmer2017neural} 中的消息传递算法（采用平均聚合，averaging aggregation）将节点 $x_j$ 的值 $v(x_j)$ 更新为 $u(x_j)$，其形式为
+\[
+u(x_j) = \frac{1}{|\mathcal{N}(x_j)|}\sum_{y \in \mathcal{N}(x_j)} \kappa(x_j, y) v(y), \qquad j=1,\dots,J
+\]
+这对应于积分~\eqref{eq:onelayertruncation} 的蒙特卡洛近似（Monte-Carlo approximation）。更复杂的数值积分规则（quadrature rules）和自适应网格（adaptive meshes）也可在图上的通用消息传递框架内实现，参见例如 \cite{pfaff2020learning}。我们将在第~\ref{sec:multipole} 小节中进一步利用这一框架。
 
 
-\paragraph{Convolutional Neural Networks. } Lastly, we compare and contrast the GNO framework to standard convolutional neural networks (CNNs). 
-In computer vision, the success of CNNs has largely been attributed to their ability to capture local features such as edges that can be used to distinguish different objects in a natural image. This property is obtained by enforcing the convolution kernel to have local support, an idea similar to our truncation approximation. Furthermore by directly using a translation invariant kernel, a CNN architecture becomes translation equivariant; this is a desirable feature for many vision models e.g. ones that perform segmentation. We will show that similar ideas can be applied to the neural operator framework to obtain an architecture with built-in local properties and translational symmetries that, unlike CNNs, remain consistent in function space.
+\vspace{2cm}
+\subsection{卷积神经网络（Convolutional Neural Networks）.}
 
-To that end, let \(\kappa(x,y) = \kappa(x - y)\) and suppose that \(\kappa : \R^d \to \R^{m \times n}\) is supported on \(B(0,r)\). Let \(r^* > 0\) be the smallest radius such that \(D \subseteq B(x^*, r^*)\) where \(x^* \in \R^d\) denotes the center of mass of \(D\) and suppose \(r \ll r^*\). Then \eqref{eq:onelayerlinear} becomes the convolution
+
+最后，我们将 GNO 框架与标准的卷积神经网络（CNNs）进行比较和对照。
+
+在计算机视觉中，CNN 的成功在很大程度上归因于其捕捉局部特征（如边缘）的能力，这些特征可用于区分自然图像中的不同物体。这一特性是通过强制卷积核具有局部支撑（local support）实现的，这一思想与我们前述的截断近似（truncation approximation）类似。此外，通过直接使用平移不变（translation invariant）的核，CNN 架构便具有平移等变性（translation equivariance）；这对许多视觉模型（例如执行分割任务的模型）而言是一项理想特性。我们将展示，类似的思想也可应用于神经算子（neural operator）框架，从而构建一种内置局部性和平移对称性的架构——与 CNN 不同的是，这种架构在函数空间中仍保持一致性（consistent in function space）。
+
+为此，令 $\kappa(x,y) = \kappa(x - y)$，并假设 $\kappa : \R^d \to \R^{m \times n}$ 的支撑集包含于 $B(0,r)$。设 $r^* > 0$ 为满足 $D \subseteq B(x^*, r^*)$ 的最小半径，其中 $x^* \in \R^d$ 表示 $D$ 的质心（center of mass），并假设 $r \ll r^*$。此时，\eqref{eq:onelayerlinear} 变为卷积形式：
 \begin{equation}
     \label{eq:onelayercnn}
     u(x) = (\kappa * v)(x) = \int_{B(x,r) \cap D} \kappa(x-y) v(y) \: \text{d} y \qquad \forall x \in D.
 \end{equation}
-Notice that \eqref{eq:onelayercnn} is precisely \eqref{eq:onelayertruncation} when \(s(x) = B(x,r) \cap D\) and \(\kappa(x,y) = \kappa(x - y)\). When the kernel is parameterized by e.g. a standard neural network and the radius \(r\) is chosen independently of the data discretization, \eqref{eq:onelayercnn} becomes a layer of a convolution neural network that is consistent in function space. Indeed the parameters of \eqref{eq:onelayercnn} do not depend on any discretization of \(v\). The choice \(\kappa(x,y) = \kappa(x - y)\) enforces translational equivariance in the output while picking \(r\) small enforces locality in the kernel; 
-hence we obtain the distinguishing features of a CNN model.
+注意，当 $s(x) = B(x,r) \cap D$ 且 $\kappa(x,y) = \kappa(x - y)$ 时，\eqref{eq:onelayercnn} 恰好就是 \eqref{eq:onelayertruncation}。当该核由例如标准神经网络参数化，且半径 $r$ 的选取独立于数据离散化方式时，\eqref{eq:onelayercnn} 就成为一个在函数空间中一致（consistent）的卷积神经网络层。事实上，\eqref{eq:onelayercnn} 的参数并不依赖于 $v$ 的任何离散化方式。选择 $\kappa(x,y) = \kappa(x - y)$ 强制输出具有平移等变性，而选取较小的 $r$ 则强制核具有局部性；因此我们获得了 CNN 模型的标志性特征。
 
-We will now show that, by picking a parameterization that is \textit{inconsistent} 
-in function space and applying a Monte Carlo approximation to the integral, \eqref{eq:onelayercnn}  becomes a standard CNN. This is most easily demonstrated when \(D = [0,1]\) and the discretization \(\{x_1,\dots,x_J\}\) is equispaced i.e. \(|x_{j+1} - x_j| = h\) for any \(j=1,\dots,J-1\). Let \(k \in \N\) be an odd filter size 
-and let \(z_1,\dots,z_k \in \R\) be the points \(z_j = (j-1-(k-1)/2)h\) for \(j=1,\dots,k\). It is easy to see that \(\{z_1,\dots,z_k\} \subset \bar{B}(0,(k-1)h/2)\) which we choose as the support of \(\kappa\). Furthermore, we parameterize \(\kappa\) directly by its pointwise values which are \(m \times n\) matrices at the locations \(z_1,\dots,z_k\) thus yielding \(kmn\) parameters. Then \eqref{eq:onelayercnn} becomes
-\[u(x_j)_p \approx \frac{1}{k} \sum_{l=1}^k \sum_{q=1}^n \kappa(z_l)_{pq} v(x_j - z_l)_q, \qquad j=1,\dots,J, \:\: p=1,\dots,m\]
-where we define \(v(x) = 0\) if \(x \not \in \{x_1,\dots,x_J\}\). Up to the constant factor \(1/k\) which can be re-absorbed into the parameterization of \(\kappa\), this is precisely the update of a stride 1 CNN with \(n\) input channels, \(m\) output channels, and zero-padding so that the input and output signals have the same length. This example can easily be generalized to higher dimensions and different CNN structures, we made the current choices for simplicity of exposition. Notice that if we double the amount of discretization points for \(v\) i.e. \(J \mapsto 2J\) and \(h \mapsto h/2\), the support of \(\kappa\) becomes \(\bar{B}(0,(k-1)h/4)\) hence the model changes due to the discretization of the data. Indeed, if we take the limit to the continuum \(J \to \infty\), we find \(\bar{B}(0,(k-1)h/2) \to \{0\}\) hence the model becomes completely local. To fix this, we may try to increase the filter size \(k\) (or equivalently add more layers) simultaneously with \(J\), but then the number of parameters in the model goes to infinity as \(J \to \infty\) since, as we previously noted, there are \(kmn\) parameters in this layer. Therefore standard CNNs are not consistent models in function space. We demonstrate their inability to generalize to different resolutions in Section~\ref{sec:numerics}.
+我们现在将说明：若选取一种在函数空间中 \textit{不一致}（inconsistent）的参数化方式，并对积分应用蒙特卡洛近似，则 \eqref{eq:onelayercnn} 就退化为标准的 CNN。这一点在 $D = [0,1]$ 且离散点集 $\{x_1,\dots,x_J\}$ 等距分布（即对任意 $j=1,\dots,J-1$ 有 $|x_{j+1} - x_j| = h$）时最容易说明。令 $k \in \N$ 为奇数（表示滤波器尺寸），并定义点 $z_1,\dots,z_k \in \R$ 为
+\[
+z_j = \bigl(j-1 - (k-1)/2\bigr) h, \qquad j=1,\dots,k.
+\]
+显然 $\{z_1,\dots,z_k\} \subset \bar{B}(0,(k-1)h/2)$，我们将其作为 $\kappa$ 的支撑集。此外，我们直接通过 $\kappa$ 在这些位置的逐点值来参数化它，即在每个 $z_j$ 处赋予一个 $m \times n$ 的矩阵，从而总共得到 $kmn$ 个参数。此时，\eqref{eq:onelayercnn} 变为
+\[
+u(x_j)_p \approx \frac{1}{k} \sum_{l=1}^k \sum_{q=1}^n \kappa(z_l)_{pq} v(x_j - z_l)_q, \qquad j=1,\dots,J, \:\: p=1,\dots,m,
+\]
+其中若 $x \notin \{x_1,\dots,x_J\}$，则定义 $v(x) = 0$。除去常数因子 $1/k$（该因子可被重新吸收到 $\kappa$ 的参数化中），这正是一个步长（stride）为 1、输入通道数为 $n$、输出通道数为 $m$、并采用零填充（zero-padding）以保证输入输出信号长度相同的 CNN 层的更新规则。该例子可轻易推广到更高维情形和不同的 CNN 结构；我们此处的选择仅为阐述简洁。
 
+注意，若我们将 $v$ 的离散点数加倍（即 $J \mapsto 2J$，同时 $h \mapsto h/2$），则 $\kappa$ 的支撑集变为 $\bar{B}(0,(k-1)h/4)$，因此模型会因数据离散化方式的改变而发生变化。事实上，当取连续极限 $J \to \infty$ 时，有 $\bar{B}(0,(k-1)h/2) \to \{0\}$，模型因而变得完全局部化。为修正这一点，我们或许可尝试在增加 $J$ 的同时增大滤波器尺寸 $k$（或等价地增加网络层数），但如此一来，由于该层包含 $kmn$ 个参数，模型参数数量将在 $J \to \infty$ 时趋于无穷。因此，标准 CNN 并非函数空间中的一致模型（consistent models in function space）。我们在第~\ref{sec:numerics} 节中展示了它们在不同分辨率下泛化能力的不足。

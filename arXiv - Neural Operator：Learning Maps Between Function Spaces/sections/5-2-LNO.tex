@@ -1,6 +1,82 @@
-
-\subsection{Low-rank Neural Operator (LNO)}
+\vspace{1cm}
+\subsection{Low-rank Neural Operator (LNO)（低秩神经算子）}
 \label{sec:lowrank}
+
+通过直接施加核函数 $\kappa$ 具有\textcolor{red}{张量积形式}的假设，我们得到了一个计算复杂度为 $\mathcal{O}(J)$ 的层。我们将这种构造称为低秩神经算子（Low-rank Neural Operator, LNO），因为\textcolor{red}{它等价于直接参数化一个有限秩算子}。我们首先假设 $\kappa : D \times D \to \R$ 是标量值函数，之后再推广到向量值情形。我们将核函数表示为
+\[
+\kappa(x,y) = \sum_{j=1}^r \varphi^{(j)}(x) \psi^{(j)}(y) \qquad \forall x,y \in D,
+\]
+其中函数 $\varphi^{(1)},\psi^{(1)},\dots,\varphi^{(r)},\psi^{(r)} : D \to \R$ 通常由两个神经网络 $\varphi, \psi : D \to \R^r$ 的分量给出，或者由一个单一的神经网络 $\Xi : D \to \R^{2r}$ 给出，该网络通过其参数将所有函数耦合在一起。在此定义下，并假设 $n=m=1$，则 \eqref{eq:onelayerlinear} 变为
+\begin{align*}
+    u(x) &= \int_D \sum_{j=1}^r \varphi^{(j)}(x) \psi^{(j)}(y) v(y) \: \text{d}y \\ 
+    &= \sum_{j=1}^r \int_D \psi^{(j)} (y) v(y) \: \text{d}y \: \varphi^{(j)}(x) \\
+    &= \sum_{j=1}^r \langle \psi^{(j)}, v \rangle \varphi^{(j)} (x),
+\end{align*}
+其中 $\langle \cdot, \cdot \rangle$ 表示 $L^2(D;\R)$ 内积。注意到这些内积的计算与评估点 $x \in D$ 无关，因此该方法的计算复杂度为 $\mathcal{O}(rJ)$，关于离散化点数呈线性。（有限秩指的是值域空间的维度有限。这里值域由 $\text{span}\{\varphi^{(1)},\dots,\varphi^{(r)}\}$ 给出。）
+
+我们也可以将这种核函数的选择解释为直接在 $L^2(D;\R)$ 上参数化一个秩为 $r \in \N$ 的算子。事实上，我们有
+\begin{equation}
+    \label{eq:finiteranksvd}
+    u = \sum_{j=1}^r (\varphi^{(j)} \otimes \psi^{(j)}) v,
+\end{equation}
+这恰好对应于将一个秩为 $r$ 的算子的奇异值分解（SVD）作用于函数 $v$。公式 \eqref{eq:finiteranksvd} 很自然地推广到向量值情形。假设 $m, n \geq 1$，且 $\varphi^{(j)}: D \to \R^m$、$\psi^{(j)} : D \to \R^n$（$j=1,\dots,r$），那么 \eqref{eq:finiteranksvd} 定义了一个从 $L^2(D;\R^n)$ 到 $L^2(D;\R^m)$ 的算子，其计算形式为
+\[
+u(x) = \sum_{j=1}^r \langle \psi^{(j)}, v \rangle_{L^2(D;\R^n)} \varphi^{(j)}(x) \qquad \forall x  \in D.
+\]
+我们再次强调，这种参数化方式具有线性的计算复杂度。最后，我们注意到该方法也可以被理解为直接在核矩阵上施加一个秩为 $r$ 的结构。事实上，
+\[
+K = K_{Jr} K_{rJ},
+\]
+其中 $K_{Jr}$ 和 $K_{rJ}$ 分别是 $J \times r$ 和 $r \times J$ 的分块矩阵。
+
+这种构造与 \cite{lu2019deeponet} 中讨论的 DeepONet 构造（见第~\ref{sec:deeponets} 节）类似，但其参数化方式在函数空间中具有一致性。
+
+%虽然该方法具有线性计算复杂度，但它本质上是一种\textit{线性}逼近方法，可能无法有效捕捉解流形（solution manifold）；详见第~\ref{sec:deeponets} 节的进一步讨论。
+
+\postponed{据我所知，我们尚未真正从 DeVore/Dahmen 的解流形视角讨论过我们的学习问题；
+或许可以改用我们已讨论过的 Bochner 范数来表述，
+或者如果引入流形视角确实能带来新见解再加以介绍。但我并不确定这一点，因为实际上（在我们隐含假设每个输入对应唯一输出的前提下）它就是一个图（graph），而 Bochner 范数衡量的正是图或图之间的误差（我们的逼近本身也是一个图）。}
+
+\iffalse
+第二种方法基于算子 $\cK$（Fredholm 核）的低秩分解，称为低秩神经算子（Low-rank neural operator, LNO）。
+令 $\U$ 为定义在 $\bar{D}$ 上、取值于 $\R$ 的函数构成的 Hilbert 空间。考虑一个紧致线性算子 $\cK: \U \to \U$。
+该算子具有奇异值分解（SVD），因此可由其秩 $r$ 截断近似：
+\[
+\cK \approx \sum_{j=1}^r \varphi^{(j)} \otimes \psi^{(j)},
+\]
+其中 $\varphi^{(j)}, \psi^{(j)} \in \U$。
+我们用两个因子神经网络来近似这两个因子函数 $\varphi^{(j)}, \psi^{(j)}: \R^{d+1} \to \R^{r \times d_v \times d_v}$（注意，无论秩 $r$ 多大，我们实际上只需要两个神经网络）。
+该方法也可视为核积分的一种形式，通过假设核的可分离性，即
+$\kappa\big(x,y, a(x), a(y)\big) = \sum_{j=1}^r \varphi^{(j)}\big(x, a(x)\big) \psi^{(j)}\big(y, a(y)\big)$，或简写为
+\[
+\kappa(x,y) = \sum_{j=1}^r \varphi^{(j)}(x) \psi^{(j)}(y).
+\]
+令 $\langle \cdot, \cdot \rangle$ 为 $L^2(D;\R)$ 内积，则
+\begin{align*}
+\bigl(\cK(a;\phi)v\bigr)(x) &= \int_D \kappa(x,y) v(y) \: dy \\
+   &= \sum_{j=1}^r \left ( \int_D \psi^{(j)}(y) v(y) \: dy \right ) \varphi^{(j)}(x) \\
+   & = \sum_{j=1}^r \langle \psi^{(j)}, v \rangle \varphi^{(j)}(x). 
+\end{align*}
+
+在离散形式下，低秩方法可视为对核矩阵 $K_{nn}$ 进行低秩分解：
+\begin{align*}
+    &K = \sum_j^r \varphi^{(j)} \otimes \psi^{(j)}\\
+    &K_{nn} = K_{nr} K_{rn}
+\end{align*}
+此时，$\varphi^{(j)}$ 和 $\psi^{(j)}$ 为 $n$ 维向量，$K_{nr}$ 和 $K_{rn}$ 的每一列和每一行分别为 $\varphi^{(j)}$ 和 $\psi^{(j)}$。
+
+\paragraph{谱分解与特征分解。}
+由于 $K$ 是一个核，也可以使用特征值分解，即强制 $\varphi = \psi$。然而，这种约束会使神经网络的训练更加困难。实践中我们观察到，若固定 $\varphi = \psi$，神经算子的误差会更高。
+
+\paragraph{秩与通道空间。}
+实践中，低秩方法并不需要很高的秩。事实上，即使秩为 1 也能很好地近似核。这是因为在提升到更高维空间 $d_v$ 后，$\varphi^{(j)}, \psi^{(j)} \in \C^{n \times d_v \times d_v}$。
+实践中，当 $d_v$ 足够大时，我们无需增加秩，只需设 $r=1$，因为高维空间本身已隐含了 $d_v \times d_v$ 的秩。
+
+\paragraph{线性复杂度。}
+可以看出，低秩方法的复杂度为 $O(n)$，其中 $n$ 为点的数量，因为我们只需分别对 $\varphi$ 和 $\psi$ 各评估 $n$ 次。
+\fi
+
+
 By directly imposing that the kernel \(\kappa\) is of a tensor product form, we obtain a layer with \(\mathcal{O}(J)\) computational complexity. We term this construction the Low-rank Neural Operator (LNO) due to its equivalence to directly parameterizing a finite-rank operator. We start by assuming \(\kappa : D \times D \to \R\) is scalar valued and later generalize to the vector valued setting. We express the kernel as
 \[\kappa(x,y) = \sum_{j=1}^r \varphi^{(j)}(x) \psi^{(j)}(y) \qquad \forall x,y \in D\]
 for some functions \(\varphi^{(1)},\psi^{(1)},\dots,\varphi^{(r)},\psi^{(r)} : D \to \R\) that are normally given as the components of two neural networks \(\varphi, \psi : D \to \R^r\) or a single neural network \(\Xi : D \to \R^{2r}\) which couples all functions through its parameters. With this definition, and supposing that \(n=m=1\), we have that \eqref{eq:onelayerlinear} becomes

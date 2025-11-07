@@ -1,34 +1,64 @@
-\section{Neural Operators}
+\newpage
+\section{Neural Operators(神经算子)}
 \label{sec:neuraloperators}
 % {\bf State the proposed architecture in a general form.
 % No reference to any specific PDE.}
 
 % \subsection{Neural Networks}
+在本节中，我们概述神经算子（neural operator）框架。
+我们假设输入函数 $a \in \A$ 是取值于 $\R^{d_a}$ 且定义在有界区域 $D \subset \R^d$ 上的函数，而输出函数 $u \in \U$ 是取值于 $\R^{d_u}$ 且定义在有界区域 $D' \subset \R^{d'}$ 上的函数。
+所提出的架构 $\F_{\theta} : \A \to \U$ 具有以下整体结构：
 
-In this section, we outline the neural operator framework.
-We assume that the input functions \(a \in \A\) are \(\R^{d_a}\)-valued and defined on the bounded domain \(D \subset \R^d\) while the output functions \(u \in \U\) are \(\R^{d_u}\)-valued and defined on the bounded domain \(D' \subset \R^{d'}\).
-The proposed architecture $\F_{\theta} : \A \to \U$ has the following overall structure:
 \begin{enumerate}
     
-    \item \textbf{Lifting}: Using a pointwise function \(\R^{d_a} \to \R^{d_{v_0}}\), map the input $\{a: D \to \R^{d_a}\} \mapsto \{v_0: D \to \R^{d_{v_0}}\}$ to its first hidden representation. Usually, we choose \(d_{v_0} > d_a\) and hence this is a lifting operation performed by a fully local operator.
+    \item \textbf{提升}（Lifting）：通过一个逐点函数（pointwise function）$\R^{d_a} \to \R^{d_{v_0}}$，将输入 $\{a: D \to \R^{d_a}\}$ 映射到其第一个隐藏表示 $\{v_0: D \to \R^{d_{v_0}}\}$。通常，我们选择 $d_{v_0} > d_a$，因此这是一个由完全局部算子（fully local operator）执行的提升操作。
     
-    \item \textbf{Iterative Kernel Integration}: For \(t=0,\dots,T-1\), map each hidden representation to the next $\{v_t: D_t \to \R^{d_{v_t}}\} \mapsto \{v_{t+1}: D_{t+1} \to \R^{d_{v_{t+1}}}\}$ via the action of the sum of a local linear operator, a non-local integral kernel operator, and a bias function, composing the
-    sum with a fixed, pointwise nonlinearity. Here we set \(D_0 = D\) and \(D_T = D'\) and impose that \(D_t \subset \R^{d_t}\) is a bounded domain.\footnote{\nk{The indexing of sets $D_{\bullet}$ here differs from the two previous indexings used in Subsection \ref{sec:discretization}. The index $t$ is not the physical time, but the iteration (layer) in the model architecture.}}
+    \item \textbf{迭代核积分}（Iterative Kernel Integration）：对于 $t=0,\dots,T-1$，通过一个局部线性算子、一个非局部积分核算子（non-local integral kernel operator）和一个偏置函数之和的作用，将每一层的隐藏表示映射到下一层：
+    $$\color{red}{\{v_t: D_t \to \R^{d_{v_t}}\} \mapsto \{v_{t+1}: D_{t+1} \to \R^{d_{v_{t+1}}}\}},$$
+    并将其和与一个固定的逐点非线性函数（pointwise nonlinearity）进行复合。这里我们设定 $D_0 = D$ 且 $D_T = D'$，并要求 $\textcolor{red}{D_t \subset \R^{d_t}}$ 是一个有界区域。\footnote{\nk{此处集合 $D_{\bullet}$ 的索引方式与第 \ref{sec:discretization} 小节中之前使用的两种索引方式不同。索引 $t$ 并非物理时间，而是模型架构中的迭代（层）索引。}}
     
-    \item \textbf{Projection}: Using a pointwise function \(\R^{d_{v_T}} \to \R^{d_u}\), map the last hidden representation $\{v_T: D' \to \R^{d_{v_T}}\} \mapsto \{u: D' \to \R^{d_u}\}$ to the output function. Analogously to the first step, we usually pick \(d_{v_T} > d_u\) and hence this is a projection step performed by a fully local operator.
+    \item \textbf{投影}（Projection）：通过一个逐点函数 $\R^{d_{v_T}} \to \R^{d_u}$，将最后一个隐藏表示 $\{v_T: D' \to \R^{d_{v_T}}\}$ 映射到输出函数 $\{u: D' \to \R^{d_u}\}$。类似于第一步，我们通常选择 $d_{v_T} > d_u$，因此这是一个由完全局部算子执行的投影步骤。
 \end{enumerate}
 
-The outlined structure mimics that of a finite dimensional neural network where hidden representations are successively mapped to produce the final output. In particular, we have
+
+所概述的结构模仿了有限维神经网络的结构，其中隐藏表示被逐层映射以产生最终输出。具体而言，我们有
 \begin{equation}
 \label{eq:F}
     \cF_{\theta} \coloneqq \cQ \circ \sigma_T(W_{T-1} + \cK_{T-1} + b_{T-1}) \circ \cdots \circ \sigma_1(W_0 + \cK_0 + b_0) \circ \cP
 \end{equation}
-where \(\cP: \R^{d_a} \to \R^{d_{v_0}}\), \(\cQ: \R^{d_{v_T}} \to \R^{d_u}\) are the local lifting and projection mappings respectively, \(W_t \in \R^{d_{v_{t+1}} \times d_{v_t}}\) are local linear operators (matrices), \(\cK_t: \{v_t: D_t \to \R^{d_{v_t}}\} \to \{v_{t+1}: D_{t+1} \to \R^{d_{v_{t+1}}}\}\) are integral kernel operators, \(b_t : D_{t+1} \to \R^{d_{v_{t+1}}}\) are bias functions, and \(\sigma_t\) are fixed activation functions acting locally as maps \(\R^{v_{t+1}} \to \R^{v_{t+1}}\) in each layer. The output dimensions \(d_{v_0},\dots,d_{v_T}\) as well as the input dimensions \(d_1,\dots,d_{T-1}\) and domains of definition \(D_1,\dots,D_{T-1}\) are hyperparameters of the architecture. By local maps, we mean that the action is pointwise, in particular, for the lifting and projection maps, we have \((\cP(a))(x) = \cP(a(x))\) for any \(x \in D\) and  \((\cQ(v_T))(x) = \cQ(v_T(x))\) for any \(x \in D'\) and similarly, for the activation,
-\((\sigma(v_{t+1}))(x) = \sigma(v_{t+1}(x))\) for any \(x \in D_{t+1}\).
-The maps, \(\cP\), \(\cQ\), and \(\sigma_t\) can thus be thought of as defining Nemitskiy operators \citep[Chapters 6,7]{dudley2011concrete} when each of their components are assumed to be Borel measurable. This interpretation allows us to define the general neural operator architecture when pointwise evaluation is not well-defined in the spaces \(\A\) or \(\U\) e.g. when they are Lebesgue, Sobolev, or Besov spaces. 
+其中 $\cP: \R^{d_a} \to \R^{d_{v_0}}$ 和 $\cQ: \R^{d_{v_T}} \to \R^{d_u}$ 分别是局部提升（lifting）和投影（projection）映射，$W_t \in \R^{d_{v_{t+1}} \times d_{v_t}}$ 是局部线性算子（矩阵），$\cK_t: \{v_t: D_t \to \R^{d_{v_t}}\} \to \{v_{t+1}: D_{t+1} \to \R^{d_{v_{t+1}}}\}$ 是积分核算子（integral kernel operators），$b_t : D_{t+1} \to \R^{d_{v_{t+1}}}$ 是偏置函数（bias functions），而 $\sigma_t$ 是固定的激活函数，在每一层中作为逐点映射  $\textcolor{blue}{\R^{d_{v_{t+1}}} \to \R^{d_{v_{t+1}}}}$作用。输出维度 $d_{v_0},\dots,d_{v_T}$ 以及输入维度 $d_1,\dots,d_{T-1}$ 和定义域 $D_1,\dots,D_{T-1}$ 都是该架构的超参数（hyperparameters）。所谓局部映射，是指\underline{其作用是逐点的}；特别地，对于提升和投影映射，我们有对任意 $x \in D$，$(\cP(a))(x) = \cP(a(x))$，以及对任意 $x \in D'$，$(\cQ(v_T))(x) = \cQ(v_T(x))$；类似地，对于激活函数，对任意 $x \in D_{t+1}$，$(\sigma(v_{t+1}))(x) = \sigma(v_{t+1}(x))$。
+因此，当映射 $\cP$、$\cQ$ 和 $\sigma_t$ 的每个分量都被假定为博雷尔可测（Borel measurable）时，它们可以被视为定义了 Nemitskiy 算子 \citep[第6,7章]{dudley2011concrete}。这种解释使得我们能够在空间 $\A$ 或 $\U$ 中逐点求值没有良好定义时（例如当它们是勒贝格空间（Lebesgue）、索伯列夫空间（Sobolev）或Besov空间时）定义一般的神经算子架构。
 
-The crucial difference between the proposed architecture \eqref{eq:F} and a standard feed-forward neural network is that all operations are directly defined in function space (\nk{noting that the activation funtions, $\cP$ and $\cQ$ are all interpreted} through their extension to Nemitskiy operators) and therefore do not depend on any discretization of the data. Intuitively, the lifting step locally maps the data to a space where the non-local part of \(\G^\dagger\) is easier to capture. \nk{We confirm this intuition numerically in Section~\ref{sec:numerics}; however, we note that for the theory presented in Section~\ref{sec:approximation} it suffices that $\cP$ is the identity map.} \nk{The non-local part of \(\G^\dagger\)} is then learned by successively approximating using integral kernel operators composed with a local nonlinearity. Each 
-integral kernel operator is the function space analog of the weight matrix in a standard feed-forward network since they are infinite-dimensional linear operators mapping one function space to another. We turn the biases, which are normally vectors, to functions and, using intuition from the ResNet architecture \citep{he2016deep}, we further add a local linear operator acting on the output of the previous layer before applying the nonlinearity. The final projection step simply gets us back to the space of our output function. We concatenate in \(\theta \in \R^p\) the parameters of \(\cP\), \(\cQ\), \(\{b_t\}\) which are usually themselves shallow neural networks, the parameters of the kernels representing \(\{\cK_t\}\) which are again usually shallow neural networks, and the matrices \(\{W_t\}\). We note, however, that our framework is general and other parameterizations such as polynomials may also be employed. 
+所提出的架构 \eqref{eq:F} 与标准前馈神经网络的关键区别在于，所有操作都是直接在函数空间中定义的（\nk{注意到激活函数 $\cP$ 和 $\cQ$ 都通过其扩展为 Nemitskiy 算子来解释}），因此不依赖于数据的任何离散化。直观上，提升步骤将数据局部地映射到一个新空间，在该空间中 $\G^\dagger$ 的非局部部分更容易捕捉。\nk{我们在第~\ref{sec:numerics}节中通过数值实验验证了这一直觉；然而需要注意的是，对于第~\ref{sec:approximation}节中提出的理论，$\cP$ 取为恒等映射就足够了。} $\G^\dagger$ 的非局部部分随后通过由积分核算子与局部非线性函数复合而成的操作进行逐层逼近来学习。每个积分核算子是标准前馈网络中权重矩阵的函数空间对应物，因为它们是将一个函数空间映射到另一个函数空间的无限维线性算子。我们将通常为向量的偏置项推广为函数，并借鉴 ResNet 架构 \citep{he2016deep} 的思想，在应用非线性之前，进一步添加一个作用于前一层输出的局部线性算子。最后的投影步骤只是将结果映射回输出函数所在的空间。我们将 $\cP$、$\cQ$、$\{b_t\}$（通常本身是浅层神经网络）的参数、表示 $\{\cK_t\}$ 的核的参数（通常也是浅层神经网络）以及矩阵 $\{W_t\}$ 的参数合并到 $\theta \in \R^p$ 中。然而我们注意到，我们的框架是通用的，也可以采用其他参数化方式，例如多项式。
+
+\vspace{1cm}
+\subsection{积分核算子（Integral Kernel Operators）} 
+
+我们定义三种在 \eqref{eq:F} 中使用的积分核算子 $\cK_t$。第一种情形下，设 $\kappa^{(t)} \in C(D_{t+1} \times D_t; \R^{d_{v_{t+1}} \times d_{v_t}})$，且 $\nu_t$ 为 $D_t$ 上的博雷尔测度（Borel measure）。于是我们定义 $\cK_t$ 为
+\begin{equation}
+    \label{eq:kernelop1}
+    (\cK_t(v_t))(x) = \int_{D_t} \kappa^{(t)} (x,y) v_t(y) \: \text{d}\nu_t(y)
+    \qquad \forall x \in D_{t+1}.
+\end{equation}
+%其中 $\nu_t$ 是 $D_t$ 上的博雷尔测度。
+通常情况下，我们取 $\nu_t$ 为 $\R^{d_t}$ 上的勒贝格测度（Lebesgue measure），但正如第~\ref{sec:four_schemes} 节所讨论的那样，其他选择可用于加速计算，或通过嵌入先验信息（\textit{a priori} information）来辅助学习过程。式 \eqref{eq:kernelop1} 中定义的积分核算子构成了神经算子（neural operator）的基本形式，也是我们在第~\ref{sec:approximation} 节中进行理论分析、并在第~\ref{sec:numerics} 节数值实验中重点研究的形式。
+
+第二种情形下，设 $\kappa^{(t)} \in C(D_{t+1} \times D_t \times \R^{d_a} \times \R^{d_a}; \R^{d_{v_{t+1}} \times d_{v_t}})$。于是我们定义 $\cK_t$ 为
+\begin{equation}
+    \label{eq:kernelop2}
+    (\cK_t(v_t))(x) = \int_{D_t} \kappa^{(t)} (x,y,a(\Pi_{t+1}^D(x)),a(\Pi_t^D(y))) v_t(y) \: \text{d}\nu_t(y)
+    \qquad \forall x \in D_{t+1}.
+\end{equation}
+其中 $\textcolor{red}{\Pi_t : D_{t+1} \to D_t}$ 是固定的\textbf{投影映射}。我们通过数值实验发现，对于某些偏微分方程（PDE）问题，形式 \eqref{eq:kernelop2} 的表现\textbf{优于} \eqref{eq:kernelop1}，这是因为\underline{解 $u$ 对参数 $a$ 有很强的依赖性}，
+\nk{例如，\ref{ssec:DF} 小节中考虑的达西流（Darcy flow）问题}。事实上，若我们将 \eqref{eq:F} 视为一个离散时间动力系统，则输入 $a \in \A$ 仅通过初始条件进入系统，因此其影响会随着网络层数的增加而逐渐减弱。通过在核函数中直接引入对 $a$ 的依赖，我们确保该参数在整个网络架构中持续发挥作用。
+
+最后一种情形下，设 $\kappa^{(t)} \in C(D_{t+1} \times D_t \times \R^{d_{v_t}} \times \R^{d_{v_t}}; \R^{d_{v_{t+1}} \times d_{v_t}})$。于是我们定义 $\cK_t$ 为
+\begin{equation}
+    \label{eq:kernelop3}
+    (\cK_t(v_t))(x) = \int_{D_t} \kappa^{(t)} (x,y,v_t(\Pi_t(x)),v_t(y)) v_t(y) \: \text{d}\nu_t(y)
+    \qquad \forall x \in D_{t+1}.
+\end{equation}
+其中 $\Pi_t : D_{t+1} \to D_t$ 是固定的映射。注意，与 \eqref{eq:kernelop1} 和 \eqref{eq:kernelop2} 不同，积分算子 \eqref{eq:kernelop3} 是非线性的，因为其核函数可以依赖于输入函数 $v_t$。借助这一定义，并结合对核函数 $\kappa_t$ 和测度 $\nu_t$ 的特定选择，我们在第~\ref{sec:transformers} 节中证明：神经算子是流行变换器架构（transformer architecture）\citep{vaswani2017attention} 在连续输入/输出空间上的推广。
 
 \paragraph{Integral Kernel Operators} We define three version of the integral kernel operator \(\cK_t\) used in \eqref{eq:F}. For the first, let \(\kappa^{(t)} \in C(D_{t+1} \times D_t; \R^{d_{v_{t+1}} \times d_{v_t}})\) and let \(\nu_t\) be a Borel measure on \(D_t\). Then we define \(\cK_t\) by
 \begin{equation}
@@ -36,65 +66,47 @@ integral kernel operator is the function space analog of the weight matrix in a 
     (\cK_t(v_t))(x) = \int_{D_t} \kappa^{(t)} (x,y) v_t(y) \: \text{d}\nu_t(y)
     \qquad \forall x \in D_{t+1}.
 \end{equation}
-%where \(\nu_t\) is Borel measure on \(D_t\). 
-Normally, we take \(\nu_t\) to simply be the Lebesgue measure on \(\R^{d_t}\) but, as discussed in Section~\ref{sec:four_schemes}, other choices can be used to speed up computation or aid the learning process by building in \textit{a priori} information. The choice of integral kernel operator in \eqref{eq:kernelop1} defines the basic form of the neural operator and is the one we analyze in Section~\ref{sec:approximation} and study most in the numerical experiments of Section~\ref{sec:numerics}.
 
-For the second, let \(\kappa^{(t)} \in C(D_{t+1} \times D_t \times \R^{d_a} \times \R^{d_a}; \R^{d_{v_{t+1}} \times d_{v_t}})\). Then we define \(\cK_t\) by
-\begin{equation}
-    \label{eq:kernelop2}
-    (\cK_t(v_t))(x) = \int_{D_t} \kappa^{(t)} (x,y,a(\Pi_{t+1}^D(x)),a(\Pi_t^D(y))) v_t(y) \: \text{d}\nu_t(y)
-    \qquad \forall x \in D_{t+1}.
-\end{equation}
-where \(\Pi_t^{D} : D_t \to D\) are fixed mappings. We have found numerically that, for certain PDE problems, the form \eqref{eq:kernelop2} outperforms \eqref{eq:kernelop1} due to the strong dependence of the solution \(u\) on the parameters \(a\), \nk{for example, the Darcy flow problem considered in subsection \ref{ssec:DF}}. Indeed, if we think of \eqref{eq:F} as a discrete time dynamical system, then the input \(a \in \A\) only enters through the initial condition hence its influence diminishes with more layers. By directly building in \(a\)-dependence into the kernel, we ensure that it influences the entire architecture.
+\vspace{1cm}
+\subsection{单隐藏层构造 (Single Hidden Layer Construction)}
 
-Lastly, let \(\kappa^{(t)} \in C(D_{t+1} \times D_t \times \R^{d_{v_t}} \times \R^{d_{v_t}}; \R^{d_{v_{t+1}} \times d_{v_t}})\). Then we define \(\cK_t\) by
-\begin{equation}
-    \label{eq:kernelop3}
-    (\cK_t(v_t))(x) = \int_{D_t} \kappa^{(t)} (x,y,v_t(\Pi_t(x)),v_t(y)) v_t(y) \: \text{d}\nu_t(y)
-    \qquad \forall x \in D_{t+1}.
-\end{equation}
-where \(\Pi_t : D_{t+1} \to D_t\) are fixed mappings. Note that, in contrast to \eqref{eq:kernelop1} and \eqref{eq:kernelop2}, the integral operator \eqref{eq:kernelop3} is nonlinear since the kernel can depend on the input function \(v_t\). With this definition and a particular choice of kernel \(\kappa_t\) and measure \(\nu_t\), we show in Section \ref{sec:transformers} that neural operators are a continuous input/output space generalization of the popular transformer architecture \citep{vaswani2017attention}. 
-
-\paragraph{Single Hidden Layer Construction} Having defined possible choices for the integral kernel operator, we are now in a position to explicitly write down a full layer of the architecture defined by \eqref{eq:F}. For simplicity, we choose the integral kernel operator given by \eqref{eq:kernelop1}, but note that the other definitions 
-\eqref{eq:kernelop2}, \eqref{eq:kernelop3} work analogously. We then have that a single hidden layer update is given by
+在定义了积分核算子（integral kernel operator）的若干可能选择之后，我们现在可以明确写出由 \eqref{eq:F} 所定义架构中的完整一层。为简便起见，我们选取由 \eqref{eq:kernelop1} 给出的积分核算子，但需注意，其他定义 \eqref{eq:kernelop2}、\eqref{eq:kernelop3} 的处理方式类似。此时，单个隐藏层的更新可表示为
 \begin{equation}
     \label{eq:onelayer}
-    v_{t+1}(x) = \sigma_{t+1} \left ( W_t v_t( \Pi_{t} (x)) + \int_{D_t} \kappa^{(t)} (x,y) v_t(y) \: \text{d}\nu_t(y) + b_t(x) \right ) \qquad \forall x \in D_{t+1}
+    v_{t+1}(x) = \sigma_{t+1} \left ( W_t v_t( \Pi_{t} (x)) + \int_{D_t} \kappa^{(t)} (x,y) v_t(y) \: \text{d}\nu_t(y) + b_t(x) \right ) \qquad \forall x \in D_{t+1},
 \end{equation}
-where \(\Pi_t : D_{t+1} \to D_t\) are fixed mappings. We remark that, since we often consider functions on the same domain, we usually take \(\Pi_t\) to be the identity. 
+其中 $\Pi_t : D_{t+1} \to D_t$ 是固定的映射。我们指出，由于我们通常考虑定义在同一区域上的函数，因此通常取 $\Pi_t$ 为恒等映射（identity）。
 
-We will now give an example of a full single hidden layer architecture i.e. when \(T=2\). We choose \(D_1 = D\), take \(\sigma_2\) as the identity,
-and denote \(\sigma_1\) by \(\sigma\), assuming it is any activation function. Furthermore, for simplicity, we set \(W_1 = 0\), \(b_1 = 0\), and assume that \(\nu_0 = \nu_1\) is the Lebesgue measure on \(\R^d\). Then  \eqref{eq:F} becomes
+接下来，我们给出一个完整的单隐藏层架构（即 $T=2$）的例子。我们选取 $D_1 = D$，令 $\sigma_2$ 为恒等映射，并将 $\sigma_1$ 简记为 $\sigma$，假设其为任意激活函数。此外，为简化起见，我们设 $W_1 = 0$、$b_1 = 0$，并假设 $\nu_0 = \nu_1$ 为 $\R^d$ 上的勒贝格测度（Lebesgue measure）。于是 \eqref{eq:F} 变为
 \begin{equation}
     \label{eq:singlehiddenlayer}
     (\G_\theta(a))(x) = \cQ \left (\int_D \kappa^{(1)}(x,y) \sigma \left ( W_0 \cP(a(y)) + \int_D \kappa^{(0)}(y,z) \cP (a(z)) \: \text{d}z + b_0(y) \right ) \: \text{d}y \right)
 \end{equation}
-for any \(x \in D'\). In this example, \(\cP \in C(\R^{d_a}; \R^{d_{v_0}})\),  \(\kappa^{(0)} \in C(D \times D; \R^{d_{v_1} \times d_{v_0}})\), \(b_0 \in C(D; \R^{d_{v_1}})\), \(W_0 \in \R^{d_{v_1} \times d_{v_0}}\), \(\kappa^{(1)} \in C(D' \times D; \R^{d_{v_2} \times d_{v_1}})\), and \(\cQ \in C(\R^{d_{v_2}}; \R^{d_u})\). One can then parametrize the continuous functions \(\cP,\cQ,\kappa^{(0)},\kappa^{(1)},b_0\) by standard feed-forward neural networks (or by any other means) and the matrix \(W_0\) simply by its entries. The parameter vector \(\theta \in \R^p\) then becomes the concatenation of the parameters of \(\cP,\cQ,\kappa^{(0)},\kappa^{(1)},b_0\) along with the entries of \(W_0\). One can then optimize these parameters by minimizing with respect to \(\theta\) using standard gradient based minimization techniques. To implement this minimization, the functions
-entering the loss need to be discretized; but the learned parameters may then be used with other discretizations. In Section~\ref{sec:four_schemes}, we discuss various choices for parametrizing the kernels, picking the integration measure,  
-and how those choices affect the computational complexity of the architecture.
-
-\paragraph{Preprocessing} It is often beneficial to manually include features into the input functions \(a\) to help facilitate the learning process. For example, instead of considering the \(\R^{d_a}\)-valued vector field \(a\) as input, we use the \(\R^{d+ d_a}\)-valued vector field \((x,a(x))\). By including the identity element, information about the geometry of the spatial domain \(D\) is directly incorporated into the architecture. This allows the neural networks direct access to information that is already known in the problem and therefore eases learning. We use this idea in all of our numerical experiments in Section~\ref{sec:numerics}. Similarly, when learning a smoothing operator, it may be beneficial to include a smoothed version of the inputs \(a_\epsilon\) using, for example, Gaussian convolution. Derivative information may also be of interest and thus, as input, one may consider, for example, the \(\R^{d + 2d_a + dd_a}\)-valued vector field \((x,a(x),a_\epsilon(x),\nabla_x a_\epsilon (x))\). Many other possibilities may be considered on a problem-specific basis. 
+对任意 $x \in D'$ 成立。在此例中，$\cP \in C(\R^{d_a}; \R^{d_{v_0}})$，$\kappa^{(0)} \in C(D \times D; \R^{d_{v_1} \times d_{v_0}})$，$b_0 \in C(D; \R^{d_{v_1}})$，$W_0 \in \R^{d_{v_1} \times d_{v_0}}$，$\kappa^{(1)} \in C(D' \times D; \R^{d_{v_2} \times d_{v_1}})$，以及 $\cQ \in C(\R^{d_{v_2}}; \R^{d_u})$。随后，我们可以用标准的前馈神经网络（feed-forward neural networks）（或其他任意方式）对连续函数 $\cP,\cQ,\kappa^{(0)},\kappa^{(1)},b_0$ 进行参数化，而矩阵 $W_0$ 则直接以其元素作为参数。参数向量 $\theta \in \R^p$ 便成为 $\cP,\cQ,\kappa^{(0)},\kappa^{(1)},b_0$ 的参数与 $W_0$ 的元素的拼接。随后，可通过标准的基于梯度的优化方法对 $\theta$ 进行优化以最小化损失函数。为实现该优化，损失函数中涉及的函数需进行离散化；但所学习到的参数可随后用于其他离散化方案。在第~\ref{sec:four_schemes} 节中，我们将讨论核函数参数化的不同选择、积分测度的选取，以及这些选择如何影响架构的计算复杂度。
 
 
+\vspace{1cm}
+\subsection{预处理（Preprocessing）} 通常，在输入函数 $a$ 中手动引入额外特征有助于促进学习过程。例如，\textcolor{red}{我们不直}\textcolor{red}{接将取值于 $\R^{d_a}$ 的向量场 $a$ 作为输入，而是使用取值于 $\R^{d + d_a}$ 的向量场 $(x, a(x))$}。通过引入恒等项（identity element），空间区域 $D$ 的几何信息便被直接嵌入到架构中。这使得神经网络可以直接访问问题中已知的信息，从而简化学习任务。我们在第~\ref{sec:numerics} 节的所有数值实验中均采用了这一思想。类似地，在学习一个光滑算子（smoothing operator）时，可能有益的做法是引入输入 $a$ 的光滑版本 $a_\epsilon$，例如通过高斯卷积（Gaussian convolution）获得。导数信息也可能具有价值，因此作为输入，可以考虑例如取值于 $\R^{d + 2d_a + dd_a}$ 的向量场 $(x, a(x), a_\epsilon(x), \nabla_x a_\epsilon (x))$。根据具体问题，还可以考虑许多其他可能性。
 
-\nk{
-\paragraph{Discretization Invariance and Approximation}
+\vspace{1cm}
+\subsection{离散化不变性与逼近性（Discretization Invariance and Approximation）}
 
-In light of discretization invariance Theorem~\ref{thm:discretizational_invariance} and universal approximation Theorems~\ref{thm:main_compact}~\ref{thm:cm_compact},~\ref{thm:measurable_approx},~\ref{thm:cm_measurable_approx} whose formal statements are given in Section~\ref{sec:approximation}, we may obtain a decomposition of the total error made by a neural operator as a sum of the discretization error and the approximation error. In particular, given a finite dimensional instantiation of a neural operator \(\hat{\G}_\theta : \R^{Ld} \times \R^{L d_a} \to \U\), for some \(L\)-point discretization of the input, we have 
-\[\|\hat{\G}_\theta (D_L, a|_{D_L}) - \G^\dagger (a)\|_\U \leq \underbrace{\|\hat{\G}_\theta (D_L, a|_{D_L}) - \G_\theta (a) \|_\U}_{\text{discretization error}} + \underbrace{\|\G_\theta (a) - \G^\dagger (a) \|_\U}_{\text{approximation error}}.\]
-Our approximation theoretic Theorems imply that we can find parameters \(\theta\) so that the approximation error is arbitrarily small while the discretization invariance Theorem states that we can find a fine enough discretization (large enough \(L\)) so that the discretization error is arbitrarily small. Therefore, with a fixed set of parameters independent of the input discretization, a neural operator that is able to be implemented on a computer can approximate operators to arbitrary accuracy.
+根据离散化不变性定理~\ref{thm:discretizational_invariance} 以及通用逼近定理~\ref{thm:main_compact}、\ref{thm:cm_compact}、\ref{thm:measurable_approx}、\ref{thm:cm_measurable_approx}（其严格陈述见第~\ref{sec:approximation} 节），我们可以将神经算子所产生的总误差分解为\textcolor{red}{离散化误差}（discretization error）与\textcolor{red}{逼近误差}（approximation error）之和。具体而言，给定一个神经算子的有限维实现 $\hat{\G}_\theta : \R^{Ld} \times \R^{L d_a} \to \U$，对应于输入在某个 $L$ 点离散化下的表示，我们有
+\[
+\|\hat{\G}_\theta (D_L, a|_{D_L}) - \G^\dagger (a)\|_\U \leq \underbrace{\|\hat{\G}_\theta (D_L, a|_{D_L}) - \G_\theta (a) \|_\U}_{\text{离散化误差}} + \underbrace{\|\G_\theta (a) - \G^\dagger (a) \|_\U}_{\text{逼近误差}}.
+\]
+我们的逼近理论定理表明，我们可以选取参数 $\theta$ 使得逼近误差任意小；而离散化不变性定理则说明，我们可以选取足够精细的离散化（即足够大的 $L$），使得离散化误差也任意小。因此，借助一组与输入离散化无关的固定参数，可在计算机上实现的神经算子能够以任意精度逼近目标算子。
 
-}
 % \label{sec:discritizational_invariance}
 
 
-%Given the construction above and the definition of discretization invariance, in the following we prove that neural operators are discretization invariant deep learning models.
+% 基于上述构造及离散化不变性的定义，我们在下文中证明神经算子是离散化不变的深度学习模型。
 
-%\begin{theorem}[Discretization Invariance and Neural Operators]
+%\begin{theorem}[离散化不变性与神经算子]
 %\label{thm:discretizational_invariance_informal}
-%Neural operators defined with continuous activation functions and viewed as maps \(\A \to \U\) are discretization-invariant deep learning models. 
+%以连续激活函数定义、并视为映射 $\A \to \U$ 的神经算子，是离散化不变的深度学习模型。
 %\end{theorem}
 
-%The formal statement of the Theorem~\ref{thm:discretizational_invariance_informal} is provided in Subsection~\ref{sec:discritizational_invariance}. This theorem states that as the discretization of the domain becomes finer and finer, the behavior of the neural operator applied to the discretized domain becomes closer and closer to that of the continuum operator. The proof is given in Appendix \ref{proof:discretizational_invariance}.
+% 定理~\ref{thm:discretizational_invariance_informal} 的严格陈述见第~\ref{sec:discritizational_invariance} 小节。该定理指出：当区域的离散化越来越精细时，作用于离散化域上的神经算子的行为将越来越接近连续算子的行为。证明见附录 \ref{proof:discretizational_invariance}。
 
-%To prove this theorem, we use the compactness of the input space to argue that there is a dictionary of finitely many functions that can approximate any function in the space. Then, we show that given a discretization, the summation approximation to the integral operator on any function in the constructed dictionary has an error depending on the fineness of the discretization. Therefore, when summation is used to approximate the integral on any function since that function is close to the dictionary, the approximation error shrinks as the discretization becomes finer.
+% 为证明该定理，我们利用输入空间的紧性（compactness）论证存在一个有限函数字典，可逼近该空间中的任意函数。接着我们证明：对于任意给定的离散化，该字典中任一函数对应的积分算子的求和近似所产生的误差依赖于离散化的精细程度。因此，由于任意函数均可被该字典良好逼近，当使用求和近似积分时，随着离散化趋于精细，整体近似误差也随之减小。
